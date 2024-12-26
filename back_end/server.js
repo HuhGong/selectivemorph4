@@ -14,6 +14,7 @@ app.use(cors({
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type'],
 }));
+
 const python_interpreter = "C:\\Users\\eu\\anaconda3\\envs\\style\\python.exe";
 
 // 요청 본문 크기 제한 설정 (30MB로 설정)
@@ -23,6 +24,8 @@ app.use(express.urlencoded({limit: '30mb', extended: true}));
 // 정적 파일 제공
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/output', express.static(path.join(__dirname, 'output')));
+// Add this line to serve static files from output/anno
+app.use('/output/anno', express.static(path.join(__dirname, 'output', 'anno')));
 
 // 이미지 업로드 엔드포인트
 app.post('/upload', async (req, res) => {
@@ -77,8 +80,10 @@ app.post('/upload', async (req, res) => {
         });
 
         // 변환된 이미지 경로를 Base64 형식으로 반환
-        const outputFiles = fs.readdirSync(outputImageDir).filter(file => file.endsWith('.png'));
-        const outputImagePaths = outputFiles.map(file => path.join('/output', file));
+        const outputAnnoDir = path.join(__dirname, 'output', 'anno');
+        const outputFiles = fs.readdirSync(outputAnnoDir)
+            .filter(file => file.endsWith('.png'));
+        const outputImagePaths = outputFiles.map(file => `/output/anno/${file}`);
 
         res.status(200).json({
             message: 'Images uploaded and processed successfully!',

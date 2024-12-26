@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { FaUpload } from "react-icons/fa6";
-import { FaImage } from "react-icons/fa";
+import React, {useState} from "react";
+import {FaUpload} from "react-icons/fa6";
+import {FaImage} from "react-icons/fa";
 
 function PhotoSelector() {
     const [contentImage, setContentImage] = useState(null);
@@ -10,21 +10,21 @@ function PhotoSelector() {
     const [currentSelection, setCurrentSelection] = useState(''); // 현재 선택된 이미지 상태 ('content' 또는 'style')
 
     const [contentPhotos, setContentPhotos] = useState([
-        { id: 1, src: '', isUpload: true },
-        { id: 2, src: require('./assets/content/image4.jpg') },
-        { id: 3, src: require('./assets/content/image5.jpg') },
-        { id: 4, src: require('./assets/content/image6.jpeg') },
-        { id: 5, src: require('./assets/content/image8.png') },
-        { id: 6, src: require('./assets/content/image11.jpg') },
+        {id: 1, src: '', isUpload: true},
+        {id: 2, src: require('./assets/content/image4.jpg')},
+        {id: 3, src: require('./assets/content/image5.jpg')},
+        {id: 4, src: require('./assets/content/image6.jpeg')},
+        {id: 5, src: require('./assets/content/image8.png')},
+        {id: 6, src: require('./assets/content/image11.jpg')},
     ]);
 
     const [stylePhotos, setStylePhotos] = useState([
-        { id: 1, src: '', isUpload: true },
-        { id: 2, src: require('./assets/style/image1.jpg') },
-        { id: 3, src: require('./assets/style/image2.jpg') },
-        { id: 4, src: require('./assets/style/image3.jpg') },
-        { id: 5, src: require('./assets/style/image4.jpg') },
-        { id: 6, src: require('./assets/style/image6.jpg') },
+        {id: 1, src: '', isUpload: true},
+        {id: 2, src: require('./assets/style/image1.jpg')},
+        {id: 3, src: require('./assets/style/image2.jpg')},
+        {id: 4, src: require('./assets/style/image3.jpg')},
+        {id: 5, src: require('./assets/style/image4.jpg')},
+        {id: 6, src: require('./assets/style/image6.jpg')},
     ]);
 
     const handleImageUpload = (e, type) => {
@@ -133,17 +133,17 @@ function PhotoSelector() {
                         onClick={() => toggleSelection('content')}
                     >
                         {contentImage ? (
-                            <img src={contentImage} alt="Content" className="image-preview" />
+                            <img src={contentImage} alt="Content" className="image-preview"/>
                         ) : (
                             <div className="placeholder">
-                                <FaImage style={{ fontSize: '24px', color: '#888' }} />
+                                <FaImage style={{fontSize: '24px', color: '#888'}}/>
                             </div>
                         )}
                     </div>
                     <input
                         type="file"
                         accept="image/*"
-                        style={{ display: 'none' }}
+                        style={{display: 'none'}}
                         id="contentUploadInput"
                         onChange={(e) => handleImageUpload(e, 'content')}
                     />
@@ -158,22 +158,23 @@ function PhotoSelector() {
                         onClick={() => toggleSelection('style')}
                     >
                         {styleImage ? (
-                            <img src={styleImage} alt="Style" className="image-preview" />
+                            <img src={styleImage} alt="Style" className="image-preview"/>
                         ) : (
                             <div className="placeholder">
-                                <FaImage style={{ fontSize: '24px', color: '#888' }} />
+                                <FaImage style={{fontSize: '24px', color: '#888'}}/>
                             </div>
                         )}
                     </div>
                     <input
                         type="file"
                         accept="image/*"
-                        style={{ display: 'none' }}
+                        style={{display: 'none'}}
                         id="styleUploadInput"
                         onChange={(e) => handleImageUpload(e, 'style')}
                     />
                     {/* Upload Button */}
-                    <button type="button" className="btn btn-primary" onClick={handleFileUploadToBackend} disabled={loading}>
+                    <button type="button" className="btn btn-primary" onClick={handleFileUploadToBackend}
+                            disabled={loading}>
                         {loading ? '업로드 중...' : '스타일 전송을 위한 업로드'}
                     </button>
                     <div className="right-section">
@@ -182,7 +183,11 @@ function PhotoSelector() {
                                 <h4>생성된 이미지:</h4>
                                 {outputImages.map((image, index) => (
                                     <div key={index}>
-                                        <img src={image} alt={`Generated Output ${index}`} className="result-preview1" />
+                                        <img
+                                            src={image}
+                                            alt={`Generated Output ${index}`}
+                                            className="result-preview1"
+                                        />
                                         <button className="download-button">Download</button>
                                     </div>
                                 ))}
@@ -206,10 +211,10 @@ function PhotoSelector() {
                                 >
                                     {photo.isUpload ? (
                                         <div className="thumbnail">
-                                            <FaUpload style={{ fontSize: '24px', color: '#888' }} />
+                                            <FaUpload style={{fontSize: '24px', color: '#888'}}/>
                                         </div>
                                     ) : (
-                                        <img src={photo.src} alt="Thumbnail" className="thumbnail-image" />
+                                        <img src={photo.src} alt="Thumbnail" className="thumbnail-image"/>
                                     )}
                                 </div>
                             ))}
@@ -217,7 +222,7 @@ function PhotoSelector() {
                                 id="contentUploadInputGallery"
                                 type="file"
                                 accept="image/*"
-                                style={{ display: 'none' }}
+                                style={{display: 'none'}}
                                 onChange={(e) => handleImageUpload(e, 'content')}
                             />
                         </div>
@@ -236,10 +241,10 @@ function PhotoSelector() {
                                 >
                                     {photo.isUpload ? (
                                         <div className="thumbnail">
-                                            <FaUpload style={{ fontSize: '24px', color: '#888' }} />
+                                            <FaUpload style={{fontSize: '24px', color: '#888'}}/>
                                         </div>
                                     ) : (
-                                        <img src={photo.src} alt="Thumbnail" className="thumbnail-image" />
+                                        <img src={photo.src} alt="Thumbnail" className="thumbnail-image"/>
                                     )}
                                 </div>
                             ))}
@@ -247,7 +252,7 @@ function PhotoSelector() {
                                 id="styleUploadInputGallery"
                                 type="file"
                                 accept="image/*"
-                                style={{ display: 'none' }}
+                                style={{display: 'none'}}
                                 onChange={(e) => handleImageUpload(e, 'style')}
                             />
                         </div>
