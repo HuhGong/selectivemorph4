@@ -214,8 +214,8 @@ def make_datapath_list(rootpath):
     annopath_template = osp.join(rootpath, 'SegmentationClass', '%s.png')
 
     # 훈련 및 검증 파일 각각의 ID(파일 이름)를 취득
-    train_id_names = osp.join(rootpath + '/ImageSets/Segmentation/train.txt')
-    val_id_names = osp.join(rootpath + '/ImageSets/Segmentation/val.txt')
+    train_id_names = osp.join(rootpath + 'ImageSets/Segmentation/train.txt')
+    val_id_names = osp.join(rootpath + 'ImageSets/Segmentation/val.txt')
 
     # 훈련 데이터의 화상 파일과 어노테이션 파일의 경로 리스트를 작성
     train_img_list = list()

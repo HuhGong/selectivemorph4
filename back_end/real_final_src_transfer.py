@@ -137,7 +137,7 @@ def load_images():
         STYLE_IMAGE_PATH = "uploads\\styleImage\\styleImage.png"
         style_img = Image.open(STYLE_IMAGE_PATH).convert("RGB")
 
-        CONTENT_IMAGE_PATH =  "uploads\\contentImage\\contentImage.png"
+        CONTENT_IMAGE_PATH = "uploads\\contentImage\\contentImage.png"
         content_img = Image.open(CONTENT_IMAGE_PATH).convert("RGB")
     except Exception as e:
         print(f"Error loading images: {e}")
@@ -151,14 +151,14 @@ def initialize_models(device):
     cnn_normalization_mean = torch.tensor([0.485, 0.456, 0.406]).to(device)
     cnn_normalization_std = torch.tensor([0.229, 0.224, 0.225]).to(device)
 
-    pspnet_weights_path = "D:\\selectivemorph2\\pspmodel\\pspnet50_.pth"
+    pspnet_weights_path = "weights\\pspnet50_.pth"
     net = load_pspnet_model(pspnet_weights_path)
 
     return cnn, cnn_normalization_mean, cnn_normalization_std, net
 
 
 def setup_dataset():
-    rootpath = "D:\\selectivemorph2\\pspmodel\\VOC2012"
+    rootpath = "VOC2012\\"
     return make_datapath_list(rootpath)
 
 

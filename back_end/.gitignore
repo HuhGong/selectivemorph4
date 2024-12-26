@@ -2,7 +2,8 @@
 
 # dependencies
 /node_modules
-
+/weights/pspnet50_.pth
 /output
 /VOC2012
 package-lock.json
+/output

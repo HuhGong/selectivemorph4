@@ -107,14 +107,14 @@ def load_images():
 
 
 def initialize_models(device):
-    pspnet_weights_path = "D:\\selectivemorph2\\pspmodel\\pspnet50_.pth"
+    pspnet_weights_path = "weights\\pspnet50_.pth"
     net = load_pspnet_model(pspnet_weights_path)
 
     return net
 
 
 def setup_dataset():
-    rootpath = "D:\\selectivemorph2\\pspmodel\\VOC2012"
+    rootpath = "VOC2012\\"
     return make_datapath_list(rootpath)
 
 
