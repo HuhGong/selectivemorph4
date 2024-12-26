@@ -31,52 +31,65 @@ app.use('/output/anno', express.static(path.join(__dirname, 'output', 'anno')));
 app.post('/upload', async (req, res) => {
     const {contentImage, styleImage} = req.body;
 
-    // 요청 데이터 유효성 검사
     if (!contentImage || !styleImage) {
         return res.status(400).json({message: 'Content Image and Style Image are required.'});
     }
-
-    console.log('Upload request received:', {contentImage, styleImage});
 
     const uploadsDir = path.join(__dirname, 'uploads');
     const contentImageDir = path.join(uploadsDir, 'contentImage');
     const styleImageDir = path.join(uploadsDir, 'styleImage');
     const outputImageDir = path.join(__dirname, 'output');
-
-    // 필요한 디렉토리 생성
-    fs.mkdirSync(contentImageDir, {recursive: true});
-    fs.mkdirSync(styleImageDir, {recursive: true});
-    fs.mkdirSync(outputImageDir, {recursive: true});
-
-    const contentImagePath = path.join(contentImageDir, 'contentImage.png');
-    const styleImagePath = path.join(styleImageDir, 'styleImage.png');
-    // output/anno 디렉토리 경로 설정
     const outputAnnoDir = path.join(__dirname, 'output', 'anno');
 
-    // output/anno 폴더의 모든 파일 삭제
     try {
-        if (fs.existsSync(outputAnnoDir)) {
-            fs.readdirSync(outputAnnoDir).forEach(file => {
-                const filePath = path.join(outputAnnoDir, file);
-                fs.unlinkSync(filePath);
-            });
-        }
-    } catch (error) {
-        console.error('Error deleting previous files:', error);
-    }
+        // 디렉토리 생성
+        fs.mkdirSync(contentImageDir, {recursive: true});
+        fs.mkdirSync(styleImageDir, {recursive: true});
+        fs.mkdirSync(outputImageDir, {recursive: true});
+        fs.mkdirSync(outputAnnoDir, {recursive: true});
 
-    try {
-        // Base64 데이터를 Buffer로 변환
+        // 기존 파일들 모두 삭제
+        const clearDirectory = (dir) => {
+            if (fs.existsSync(dir)) {
+                fs.readdirSync(dir).forEach(file => {
+                    const filePath = path.join(dir, file);
+                    if (fs.statSync(filePath).isDirectory()) {
+                        clearDirectory(filePath); // 중첩 디렉토리 처리
+                    } else {
+                        fs.unlinkSync(filePath);
+                    }
+                });
+            }
+        };
+
+        // 모든 관련 디렉토리 초기화
+        clearDirectory(contentImageDir);
+        clearDirectory(styleImageDir);
+        clearDirectory(outputAnnoDir);
+
+        const contentImagePath = path.join(contentImageDir, 'contentImage.png');
+        const styleImagePath = path.join(styleImageDir, 'styleImage.png');
+
+        // 이미지 처리 및 저장
         const contentImageBuffer = Buffer.from(contentImage.replace(/^data:image\/\w+;base64,/, ""), 'base64');
         const styleImageBuffer = Buffer.from(styleImage.replace(/^data:image\/\w+;base64,/, ""), 'base64');
 
-        // 이미지 저장
         await sharp(contentImageBuffer).toFile(contentImagePath);
         await sharp(styleImageBuffer).toFile(styleImagePath);
 
+        // Python 스크립트 실행 전에 output/anno 디렉토리의 모든 파일 삭제
+        if (fs.existsSync(outputAnnoDir)) {
+            const files = fs.readdirSync(outputAnnoDir);
+            for (const file of files) {
+                fs.unlinkSync(path.join(outputAnnoDir, file));
+            }
+        } else {
+            fs.mkdirSync(outputAnnoDir, {recursive: true});
+        }
+
         // Python 스크립트 실행
         await new Promise((resolve, reject) => {
-            exec(`"${python_interpreter}"  ${path.join(__dirname, 'segment.py')} "${contentImagePath}" "${styleImagePath}"`,
+            exec(`"${python_interpreter}" ${path.join(__dirname, 'segment.py')} "${contentImagePath}" "${styleImagePath}"`,
                 {
                     env: {...process.env},
                     shell: true
@@ -89,25 +102,28 @@ app.post('/upload', async (req, res) => {
                     if (stderr) {
                         console.error(`Python script stderr: ${stderr}`);
                     }
-                    resolve();
+                    // 파일 시스템 동기화를 위한 지연 추가
+                    setTimeout(() => {
+                        resolve();
+                    }, 1000); // 1초 대기
                 });
         });
 
-        // 변환된 이미지 경로를 Base64 형식으로 반환
-        const outputAnnoDir = path.join(__dirname, 'output', 'anno');
-        const outputFiles = fs.readdirSync(outputAnnoDir)
+        // 새로 생성된 이미지 경로만 반환
+        const newOutputFiles = fs.readdirSync(outputAnnoDir)
             .filter(file => file.endsWith('.png'));
-        const outputImagePaths = outputFiles.map(file => `/output/anno/${file}`);
+        const outputImagePaths = newOutputFiles.map(file => `/output/anno/${file}`);
 
         res.status(200).json({
             message: 'Images uploaded and processed successfully!',
-            outputImages: outputImagePaths, // PNG 파일 경로 반환
+            outputImages: outputImagePaths,
         });
     } catch (error) {
         console.error('Error processing images:', error);
         res.status(500).json({message: 'Error processing images', error: error.message});
     }
 });
+
 
 // 서버 코드는 그대로 유지
 app.get('/annotations', (req, res) => {

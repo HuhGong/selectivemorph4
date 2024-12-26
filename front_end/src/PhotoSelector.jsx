@@ -58,7 +58,10 @@ function PhotoSelector() {
             alert('Content Image와 Style Image를 모두 선택해 주세요.');
             return;
         }
+
         setLoading(true);
+        // 업로드 전에 outputImages 배열을 비움
+        setOutputImages([]);
 
         try {
             const response = await fetch('http://localhost:5000/upload', {
@@ -76,13 +79,12 @@ function PhotoSelector() {
                 const data = await response.json();
                 alert('이미지 업로드가 완료되었습니다!');
 
-                // 출력 이미지 경로를 업데이트
                 if (data.outputImages) {
-                    // 이미지 경로를 절대 경로로 변환
                     const absoluteImagePaths = data.outputImages.map(imagePath =>
                         `http://localhost:5000${imagePath}`
                     );
-                    setOutputImages(absoluteImagePaths); // 여러 출력 이미지 업데이트
+                    // 새로운 이미지로 상태를 완전히 교체
+                    setOutputImages(absoluteImagePaths);
                 } else {
                     console.error('Output images are undefined.');
                     alert('서버에서 출력 이미지를 받지 못했습니다.');
