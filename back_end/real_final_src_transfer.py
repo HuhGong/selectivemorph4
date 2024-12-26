@@ -134,10 +134,10 @@ def setup_output_folder():
 
 def load_images():
     try:
-        STYLE_IMAGE_PATH = "uploads\\styleImage\\styleImage.png"
+        STYLE_IMAGE_PATH = "uploads/styleImage/styleImage.png"
         style_img = Image.open(STYLE_IMAGE_PATH).convert("RGB")
 
-        CONTENT_IMAGE_PATH = "uploads\\contentImage\\contentImage.png"
+        CONTENT_IMAGE_PATH = "uploads/contentImage/contentImage.png"
         content_img = Image.open(CONTENT_IMAGE_PATH).convert("RGB")
     except Exception as e:
         print(f"Error loading images: {e}")
@@ -158,7 +158,7 @@ def initialize_models(device):
 
 
 def setup_dataset():
-    rootpath = "VOC2012\\"
+    rootpath = "VOC2012/"
     return make_datapath_list(rootpath)
 
 

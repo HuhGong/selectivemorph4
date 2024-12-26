@@ -15,7 +15,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type'],
 }));
 
-const python_interpreter = "C:\\Users\\edu\\anaconda3\\envs\\kaka\\python.exe";
+const python_interpreter = '/home/hancom/anaconda3/envs/cv_env/bin/python3';
 
 // 요청 본문 크기 제한 설정 (30MB로 설정)
 app.use(express.json({limit: '30mb'}));
@@ -62,7 +62,7 @@ app.post('/upload', async (req, res) => {
 
         // Python 스크립트 실행
         await new Promise((resolve, reject) => {
-            exec(`"${python_interpreter}"  ${path.join(__dirname, 'segment.py')} "${contentImagePath}" "${styleImagePath}"`,
+            exec(`${python_interpreter}  ${path.join(__dirname, 'segment.py')} "${contentImagePath}" "${styleImagePath}"`,
                 {
                     env: {...process.env},
                     shell: true
