@@ -91,8 +91,29 @@ app.post('/upload', async (req, res) => {
 });
 
 // 모든 주석 파일을 전송하는 엔드포인트 추가
+// app.get('/annotations', (req, res) => {
+//     const annotationsDir = path.join(__dirname, 'output', 'anno'); // 주석 파일이 있는 디렉토리 경로
+//
+//     fs.readdir(annotationsDir, (err, files) => {
+//         if (err) {
+//             console.error('Error reading annotations directory:', err);
+//             return res.status(500).json({message: 'Error reading annotations directory', error: err.message});
+//         }
+//
+//         // .png 파일만 필터링
+//         const annotationFiles = files.filter(file => file.endsWith('.png'));
+//         const annotationPaths = annotationFiles.map(file => path.join('/output/anno', file)); // 상대 경로로 변환
+//
+//         res.status(200).json({
+//             message: 'Annotation images retrieved successfully!',
+//             annotations: annotationPaths, // 주석 이미지 경로 반환
+//         });
+//     });
+// });
+
+// 서버 코드는 그대로 유지
 app.get('/annotations', (req, res) => {
-    const annotationsDir = path.join(__dirname, 'output', 'anno'); // 주석 파일이 있는 디렉토리 경로
+    const annotationsDir = path.join(__dirname, 'output');
 
     fs.readdir(annotationsDir, (err, files) => {
         if (err) {
@@ -100,16 +121,23 @@ app.get('/annotations', (req, res) => {
             return res.status(500).json({message: 'Error reading annotations directory', error: err.message});
         }
 
-        // .png 파일만 필터링
-        const annotationFiles = files.filter(file => file.endsWith('.png'));
-        const annotationPaths = annotationFiles.map(file => path.join('/output/anno', file)); // 상대 경로로 변환
+        const annotationFiles = files
+            .filter(file => {
+                const filePath = path.join(annotationsDir, file);
+                return fs.statSync(filePath).isFile() &&
+                    file.startsWith('anno/') &&
+                    file.endsWith('.png');
+            });
+
+        const annotationPaths = annotationFiles.map(file => path.join('/output', file));
 
         res.status(200).json({
             message: 'Annotation images retrieved successfully!',
-            annotations: annotationPaths, // 주석 이미지 경로 반환
+            annotations: annotationPaths,
         });
     });
 });
+
 
 // 기본 오류 처리 미들웨어
 app.use((err, req, res, next) => {
