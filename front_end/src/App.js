@@ -12,12 +12,11 @@ function App() {
             <div>
                 <Header />
                 <div className="main-container">
-                    <div className="scroll-container">
-                        <Scroll />
-                    </div>
-                    <div className="photo-selector-container">
-                        <PhotoSelector />
-                    </div>
+                    <Routes>
+                        <Route path="/" element={<Scroll />} />
+                        <Route path="/transfer" element={<PhotoSelector />} />
+                        {/* 다른 경로에 대한 Route 추가 가능 */}
+                    </Routes>
                 </div>
             </div>
         </Router>
