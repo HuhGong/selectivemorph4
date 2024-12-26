@@ -1,7 +1,5 @@
 from pspNet import *
-# from torchvision.models import vgg19
 import torch
-# from torchvision import transforms
 import numpy as np
 from PIL import Image
 import os

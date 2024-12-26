@@ -19,9 +19,6 @@ function App() {
                         <PhotoSelector />
                     </div>
                 </div>
-                <div className="annotation-container">
-                    <AnnotationViewer /> {/* 추가된 주석 뷰어 컴포넌트 */}
-                </div>
             </div>
         </Router>
     );

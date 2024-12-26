@@ -15,7 +15,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type'],
 }));
 
-const python_interpreter = "C:\\Users\\eu\\anaconda3\\envs\\style\\python.exe";
+const python_interpreter = "C:\\Users\\edu\\anaconda3\\envs\\kaka\\python.exe";
 
 // 요청 본문 크기 제한 설정 (30MB로 설정)
 app.use(express.json({limit: '30mb'}));
@@ -94,27 +94,6 @@ app.post('/upload', async (req, res) => {
         res.status(500).json({message: 'Error processing images', error: error.message});
     }
 });
-
-// 모든 주석 파일을 전송하는 엔드포인트 추가
-// app.get('/annotations', (req, res) => {
-//     const annotationsDir = path.join(__dirname, 'output', 'anno'); // 주석 파일이 있는 디렉토리 경로
-//
-//     fs.readdir(annotationsDir, (err, files) => {
-//         if (err) {
-//             console.error('Error reading annotations directory:', err);
-//             return res.status(500).json({message: 'Error reading annotations directory', error: err.message});
-//         }
-//
-//         // .png 파일만 필터링
-//         const annotationFiles = files.filter(file => file.endsWith('.png'));
-//         const annotationPaths = annotationFiles.map(file => path.join('/output/anno', file)); // 상대 경로로 변환
-//
-//         res.status(200).json({
-//             message: 'Annotation images retrieved successfully!',
-//             annotations: annotationPaths, // 주석 이미지 경로 반환
-//         });
-//     });
-// });
 
 // 서버 코드는 그대로 유지
 app.get('/annotations', (req, res) => {

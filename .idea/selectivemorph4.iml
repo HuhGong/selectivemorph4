@@ -13,7 +13,7 @@
       <excludeFolder url="file://$MODULE_DIR$/back_end/VOC2012" />
       <excludeFolder url="file://$MODULE_DIR$/back_end/output" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="kaka" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="style interpreter library" level="application" />
   </component>
