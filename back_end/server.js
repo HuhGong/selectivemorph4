@@ -7,7 +7,7 @@ const {exec} = require('child_process');
 
 const app = express();
 const PORT = 5000;
-
+require('dotenv').config();
 // CORS 설정
 app.use(cors({
     origin: '*', // 모든 출처 허용
@@ -15,7 +15,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type'],
 }));
 
-const python_interpreter = "C:\\Users\\edu\\anaconda3\\envs\\kaka\\python.exe";
+const python_interpreter = process.env.PYTHON_INTERPRETER;
 
 // 요청 본문 크기 제한 설정 (30MB로 설정)
 app.use(express.json({limit: '30mb'}));
