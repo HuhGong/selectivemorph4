@@ -7,7 +7,7 @@ function PhotoSelector() {
     const [styleImage, setStyleImage] = useState(null);
     const [loading, setLoading] = useState(false);
     const [outputImages, setOutputImages] = useState([]); // 여러 출력 이미지 저장
-    const [currentSelection, setCurrentSelection] = useState(''); // 현재 선택된 이미지 상태 ('content' 또는 'style')
+    const [currentSelection, setCurrentSelection] = useState('content'); // 현재 선택된 이미지 상태 ('content' 또는 'style')
 
     const [contentPhotos, setContentPhotos] = useState([
         {id: 1, src: '', isUpload: true},

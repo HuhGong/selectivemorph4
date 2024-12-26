@@ -8,6 +8,7 @@
   box-sizing: border-box; /* 패딩 포함 */
   height: 100vh; /* 부모 높이를 고정 */
   position: relative; /* 필요 시 위치 조정 */
+  margin-top: 70px; /* 네비게이션 바 아래로 70px 내려감 */
 
 }
 
