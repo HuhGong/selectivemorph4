@@ -50,6 +50,20 @@ app.post('/upload', async (req, res) => {
 
     const contentImagePath = path.join(contentImageDir, 'contentImage.png');
     const styleImagePath = path.join(styleImageDir, 'styleImage.png');
+    // output/anno 디렉토리 경로 설정
+    const outputAnnoDir = path.join(__dirname, 'output', 'anno');
+
+    // output/anno 폴더의 모든 파일 삭제
+    try {
+        if (fs.existsSync(outputAnnoDir)) {
+            fs.readdirSync(outputAnnoDir).forEach(file => {
+                const filePath = path.join(outputAnnoDir, file);
+                fs.unlinkSync(filePath);
+            });
+        }
+    } catch (error) {
+        console.error('Error deleting previous files:', error);
+    }
 
     try {
         // Base64 데이터를 Buffer로 변환
