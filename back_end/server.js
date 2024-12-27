@@ -102,6 +102,8 @@ app.post('/process-selected', (req, res) => {
 });
 
 // 선택된 클래스 처리 엔드포인트 추가
+const { exec } = require('child_process');
+
 app.post('/transfer', async (req, res) => {
     const { selectedClasses } = req.body;
 
@@ -118,7 +120,8 @@ app.post('/transfer', async (req, res) => {
         await new Promise((resolve, reject) => {
             exec(`"${python_interpreter}" "${scriptPath}" ${classesString}`, {
                 env: { ...process.env },
-                shell: true
+                shell: true,
+                encoding: 'utf-8'  // 인코딩 설정
             }, (error, stdout, stderr) => {
                 if (error) {
                     console.error(`Error executing Python script: ${error.message}`);
@@ -147,7 +150,6 @@ app.post('/transfer', async (req, res) => {
         res.status(500).json({ message: 'Error during class transfer', error: error.message });
     }
 });
-
 
 
 app.get('/annotations', (req, res) => {

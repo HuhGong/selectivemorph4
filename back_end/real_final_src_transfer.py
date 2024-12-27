@@ -8,6 +8,11 @@ from PIL import Image
 import os
 
 import sys
+import logging
+
+# 로거 설정
+logging.basicConfig(level=logging.INFO, encoding='utf-8')  # 로그 레벨 설정
+logger = logging.getLogger(__name__)
 
 # 전달된 인자들
 selected_classes = sys.argv[1:]  # 공백으로 구분된 인자들
@@ -15,19 +20,20 @@ selected_classes = sys.argv[1:]  # 공백으로 구분된 인자들
 # 클래스 ID를 int로 변환
 selected_classes = [int(cls_id) for cls_id in selected_classes if cls_id.isdigit()]
 
-print("Selected classes:", selected_classes)
-print(type(selected_classes))
+# 로그 남기기
+logger.info("Selected classes: %s", selected_classes)  # 출력
+logger.info("Type of selected_classes: %s", type(selected_classes))  # 출력
 
 target_class_ids = selected_classes
-#
-# target_class_ids = [13, 15]
 
-# exit()
+
+
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 torch.set_default_device(device)
 custom_size = (720, 720)
+# custom_size = (420, 420)
 
 
 
