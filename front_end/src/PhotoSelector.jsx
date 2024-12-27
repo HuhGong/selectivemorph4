@@ -6,10 +6,9 @@ function PhotoSelector() {
     const [contentImage, setContentImage] = useState(null);
     const [styleImage, setStyleImage] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [outputImages, setOutputImages] = useState([]);
+    const [outputImages, setOutputImages] = useState([]); // { id, path } 형태의 배열
     const [currentSelection, setCurrentSelection] = useState('');
     const [selectedIds, setSelectedIds] = useState([]);
-    const [selectedImageIndexes, setSelectedImageIndexes] = useState([]);
     const [finalImage, setFinalImage] = useState(null); // 최종 이미지 상태 추가
 
     const [contentPhotos, setContentPhotos] = useState([
@@ -46,6 +45,19 @@ function PhotoSelector() {
 
     const handlePhotoClick = (photo, type) => {
         const id = photo.id;
+
+        // 갤러리에서 클릭한 경우에는 selectedIds를 변경하지 않음
+        if (type === 'content' || type === 'style') {
+            // 해당 이미지 클릭 시 contentImage 또는 styleImage 설정
+            if (type === 'content') {
+                setContentImage(photo.src);
+            } else if (type === 'style') {
+                setStyleImage(photo.src);
+            }
+            return; // ID 리스트를 변경하지 않고 종료
+        }
+
+        // 일반 클릭 처리 (outputImages 클릭 등)
         setSelectedIds(prevIds => {
             if (prevIds.includes(id)) {
                 return prevIds.filter(existingId => existingId !== id);
@@ -53,14 +65,8 @@ function PhotoSelector() {
                 return [...prevIds, id];
             }
         });
-
-        // 해당 이미지 클릭 시 contentImage 또는 styleImage 설정
-        if (type === 'content') {
-            setContentImage(photo.src);
-        } else if (type === 'style') {
-            setStyleImage(photo.src);
-        }
     };
+
 
 
     const handleFileUploadToBackend = async () => {
@@ -87,10 +93,11 @@ function PhotoSelector() {
                 alert('이미지 업로드가 완료되었습니다!');
 
                 if (data.outputImages) {
-                    const absoluteImagePaths = data.outputImages.map(imagePath =>
-                        `http://localhost:5000${imagePath}`
-                    );
-                    setOutputImages(absoluteImagePaths);
+                    const absoluteImagePaths = data.outputImages.map((imagePath, index) => ({
+                        id: index, // ID 설정
+                        path: `http://localhost:5000${imagePath}` // 절대 경로 설정
+                    }));
+                    setOutputImages(absoluteImagePaths); // 상태 업데이트
                 } else {
                     console.error('Output images are undefined.');
                     alert('서버에서 출력 이미지를 받지 못했습니다.');
@@ -111,7 +118,6 @@ function PhotoSelector() {
     const handleClassTransfer = async () => {
         setLoading(true);
         try {
-            // 전송하기 전에 selectedIds 출력
             console.log('Selected IDs before sending:', selectedIds);
 
             const response = await fetch('http://localhost:5000/transfer', {
@@ -119,11 +125,14 @@ function PhotoSelector() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ selectedClasses: selectedIds }), // 선택된 클래스 리스트 전송
+                body: JSON.stringify({ selectedClasses: selectedIds }),
             });
 
+            console.log('Server response:', response);  // 서버 응답 로그
             if (response.ok) {
                 const data = await response.json();
+                console.log('Transfer data:', data);  // 데이터 로그
+                setFinalImage(`http://localhost:5000${data.finalImagePath}`); // finalImage 업데이트
                 alert('클래스 트랜스퍼가 완료되었습니다!');
             } else {
                 const errorData = await response.json();
@@ -136,8 +145,6 @@ function PhotoSelector() {
             setLoading(false);
         }
     };
-
-
 
     const convertToBase64 = (url) => {
         return new Promise((resolve, reject) => {
@@ -158,14 +165,26 @@ function PhotoSelector() {
     };
 
     const handleGeneratedImageClick = (index) => {
-        setSelectedImageIndexes(prevIndexes => {
-            if (prevIndexes.includes(index)) {
-                return prevIndexes.filter(i => i !== index); // 이미 존재하면 제거
-            } else {
-                return [...prevIndexes, index]; // 없으면 추가
-            }
-        });
+        const imageObj = outputImages[index]; // 클릭한 이미지 객체 가져오기
+        const imagePath = imageObj.path; // 이미지 경로 가져오기
+
+        // 파일 경로에서 ID 추출
+        const match = imagePath.match(/anno_class_img_(\d+)\.png$/);
+        const id = match ? match[1] : null; // ID를 추출
+
+        if (id !== null) {
+            setSelectedIds(prevIds => {
+                if (prevIds.includes(id)) {
+                    return prevIds.filter(existingId => existingId !== id); // 이미 존재하면 제거
+                } else {
+                    return [...prevIds, id]; // 없으면 추가
+                }
+            });
+        }
     };
+
+
+
 
     return (
         <div className="container">
@@ -228,10 +247,10 @@ function PhotoSelector() {
                         {outputImages.length > 0 && (
                             <div className="result-container">
                                 <h4>생성된 이미지:</h4>
-                                {outputImages.map((image, index) => (
+                                {outputImages.map((imageObj, index) => (
                                     <div key={index} onClick={() => handleGeneratedImageClick(index)}>
                                         <img
-                                            src={image}
+                                            src={imageObj.path} // 이미지 경로 사용
                                             alt={`Generated Output ${index}`}
                                             className="result-preview1"
                                         />
@@ -308,16 +327,17 @@ function PhotoSelector() {
             </div>
 
             {/* 클릭한 이미지 번호 리스트 표시 */}
-            {selectedImageIndexes.length > 0 && (
+            {selectedIds.length > 0 && (
                 <div className="image-number-display">
                     <h4>클릭한 이미지 번호:</h4>
                     <ul>
-                        {selectedImageIndexes.map(index => (
-                            <li key={index}>{index}</li>
+                        {selectedIds.sort((a, b) => a - b).map(id => ( // ID를 오름차순으로 정렬
+                            <li key={id}>{id}</li>
                         ))}
                     </ul>
                 </div>
             )}
+
 
             {/* 클래스를 트랜스퍼 버튼 */}
             <button className="btn btn-primary" onClick={handleClassTransfer}>
