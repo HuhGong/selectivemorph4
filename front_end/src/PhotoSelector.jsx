@@ -11,6 +11,7 @@ function PhotoSelector() {
     const [currentSelection, setCurrentSelection] = useState('content'); // 현재 선택된 이미지 상태 ('content' 또는 'style')
     const [selectedIds, setSelectedIds] = useState([]);
     const [finalImage, setFinalImage] = useState(null); // 최종 이미지 상태 추가
+    const [transferLoading, setTransferLoading] = useState(false);
 
 
     const [contentPhotos, setContentPhotos] = useState([
@@ -132,8 +133,9 @@ function PhotoSelector() {
     };
 
     const handleClassTransfer = async () => {
-        setLoading(true);
+        setTransferLoading(true);
         try {
+            console.log('Selected IDs before sending:', selectedIds);
             const response = await fetch('http://localhost:5000/transfer', {
                 method: 'POST',
                 headers: {
@@ -160,7 +162,7 @@ function PhotoSelector() {
             alert('클래스 트랜스퍼 중 오류가 발생했습니다.');
             console.error('Transfer error:', error);
         } finally {
-            setLoading(false);
+            setTransferLoading(false);
         }
     };
 
@@ -371,8 +373,8 @@ function PhotoSelector() {
 
 
             {/* 클래스를 트랜스퍼 버튼 */}
-            <button className="btn btn-primary" onClick={handleClassTransfer}>
-                클래스를 트랜스퍼
+            <button className="btn btn-primary" onClick={handleClassTransfer} disabled={transferLoading}>
+                {transferLoading ? '트랜스퍼 중...' : '클래스를 트랜스퍼'}
             </button>
 
             {/* 최종 이미지 표시 */}
