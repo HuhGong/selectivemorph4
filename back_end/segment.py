@@ -92,6 +92,21 @@ def setup_output_folder():
     os.makedirs(output_folder, exist_ok=True)
     return output_folder
 
+def clear_output_folder(output_folder):
+    """output/anno 폴더의 모든 파일을 삭제합니다."""
+    for filename in os.listdir(output_folder):
+        file_path = os.path.join(output_folder, filename)
+        try:
+            if os.path.isfile(file_path):
+                os.remove(file_path)  # 파일 삭제
+                print(f"Deleted: {file_path}")
+        except Exception as e:
+            print(f"Error deleting {file_path}: {e}")
+
+def setup_output_folder():
+    output_folder = "output\\anno"
+    os.makedirs(output_folder, exist_ok=True)
+    return output_folder
 
 def load_images():
     try:
@@ -153,6 +168,9 @@ def segment_image(net, content_img, anno_class_img, transform, device, content_i
 
 def main():
     output_folder = setup_output_folder()
+    # output/anno 폴더 비우기
+    clear_output_folder(output_folder)
+
     content_img, CONTENT_IMAGE_PATH = load_images()
     net = initialize_models(device)
     train_img_list, train_anno_list, val_img_list, val_anno_list = setup_dataset()

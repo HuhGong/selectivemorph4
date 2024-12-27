@@ -35,6 +35,8 @@ app.post('/upload', async (req, res) => {
         return res.status(400).json({message: 'Content Image and Style Image are required.'});
     }
 
+    console.log('Upload request received:', { contentImage, styleImage });
+
     const uploadsDir = path.join(__dirname, 'uploads');
     const contentImageDir = path.join(uploadsDir, 'contentImage');
     const styleImageDir = path.join(uploadsDir, 'styleImage');
@@ -111,8 +113,68 @@ app.post('/upload', async (req, res) => {
     }
 });
 
+// 선택된 이미지 ID 처리 엔드포인트
+app.post('/process-selected', (req, res) => {
+    const { selectedIds } = req.body;
 
-// 서버 코드는 그대로 유지
+    if (!selectedIds || !Array.isArray(selectedIds)) {
+        return res.status(400).json({ message: 'Selected IDs are required and must be an array.' });
+    }
+
+    console.log('Selected IDs received:', selectedIds);
+
+    res.status(200).json({ message: 'Selected IDs processed successfully!', selectedIds });
+});
+
+
+app.post('/transfer', async (req, res) => {
+    const { selectedClasses } = req.body;
+
+    if (!selectedClasses || !Array.isArray(selectedClasses)) {
+        return res.status(400).json({ message: 'Selected classes are required and must be an array.' });
+    }
+
+    console.log('Selected classes received:', selectedClasses);
+
+    const scriptPath = path.join(__dirname, 'real_final_src_transfer.py');
+    const classesString = selectedClasses.join(' '); // 클래스 리스트를 공백으로 구분된 문자열로 변환
+
+    try {
+        await new Promise((resolve, reject) => {
+            exec(`"${python_interpreter}" "${scriptPath}" ${classesString}`, {
+                env: { ...process.env },
+                shell: true,
+                encoding: 'utf-8'  // 인코딩 설정
+            }, (error, stdout, stderr) => {
+                if (error) {
+                    console.error(`Error executing Python script: ${error.message}`);
+                    return reject(error);
+                }
+                if (stderr) {
+                    console.error(`Python script stderr: ${stderr}`);
+                }
+                console.log(`Python script output: ${stdout}`); // Python 스크립트의 출력 확인
+                resolve();
+            });
+        });
+
+        const finalImagePath = path.join(__dirname, 'output', 'final_combined_image.png');
+
+        if (fs.existsSync(finalImagePath)) {
+            res.status(200).json({
+                message: 'Class transfer completed successfully!',
+                finalImagePath: '/output/final_combined_image.png',
+            });
+        } else {
+            res.status(404).json({ message: 'Final combined image not found.' });
+        }
+    } catch (error) {
+        console.error('Error during class transfer:', error);
+        res.status(500).json({ message: 'Error during class transfer', error: error.message });
+    }
+});
+
+
 app.get('/annotations', (req, res) => {
     const annotationsDir = path.join(__dirname, 'output');
 

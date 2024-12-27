@@ -6,12 +6,35 @@ from torchvision.utils import save_image
 import numpy as np
 from PIL import Image
 import os
+import sys
+import logging
+
+# 로거 설정
+logging.basicConfig(level=logging.INFO, encoding='utf-8')  # 로그 레벨 설정
+logger = logging.getLogger(__name__)
+
+# 전달된 인자들
+selected_classes = sys.argv[1:]  # 공백으로 구분된 인자들
+
+# 클래스 ID를 int로 변환
+selected_classes = [int(cls_id) for cls_id in selected_classes if cls_id.isdigit()]
+
+# 로그 남기기
+logger.info("Selected classes: %s", selected_classes)  # 출력
+logger.info("Type of selected_classes: %s", type(selected_classes))  # 출력
+
+target_class_ids = selected_classes
+
+
+
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 torch.set_default_device(device)
 custom_size = (720, 720)
-target_class_ids = [0]
-# 클래스 이름 정의 (Pascal VOC 데이터셋)
+# custom_size = (420, 420)
+
+
+
 class_names = {
     0: "Background", 1: "Aeroplane", 2: "Bicycle", 3: "Bird", 4: "Boat", 5: "Bottle", 6: "Bus", 7: "Car",
     8: "Cat", 9: "Chair", 10: "Cow", 11: "Dining Table", 12: "Dog", 13: "Horse", 14: "Motorbike",
@@ -163,7 +186,7 @@ def setup_dataset():
 
 
 def process_segmentation(net, content_img, anno_class_img, transform, device, content_img_width, content_img_height,
-                         p_palette, output_folder):
+                         p_palette):
     phase = 'val'
     img, anno_class_img = transform(phase, content_img, anno_class_img)
 
@@ -179,15 +202,7 @@ def process_segmentation(net, content_img, anno_class_img, transform, device, co
     anno_class_img = anno_class_img.resize((content_img_width, content_img_height), Image.NEAREST)
     anno_class_img.putpalette(p_palette)
 
-    # 각 클래스별 이미지 저장
-    unique_classes = np.unique(y)
-    for class_id in unique_classes:
-        class_mask = (y == class_id).astype(np.uint8) * 255  # 클래스 마스크 생성
-        class_image = Image.fromarray(class_mask, mode="L")  # "L" 모드로 저장
-        class_image = class_image.resize((content_img_width, content_img_height), Image.NEAREST)
-        class_image_path = os.path.join(output_folder, f"anno_class_img_{class_id}.png")
-        class_image.save(class_image_path)
-
+    # 최종 결과 이미지만 저장하도록 수정
     return anno_class_img
 
 
@@ -238,6 +253,7 @@ def save_final_result(style_transferred_output, CONTENT_IMAGE_PATH, class_mask_e
     result_array = np.where(class_mask_expanded, style_transferred_array, original_array)
     final_result = Image.fromarray(result_array.astype(np.uint8))
 
+    # final_combined_image.png만 저장하도록 수정
     final_result_path = os.path.join(output_folder, "final_combined_image.png")
     final_result.save(final_result_path)
     return final_result_path
@@ -262,10 +278,7 @@ def main():
     p_palette = anno_class_img.getpalette()
 
     anno_class_img = process_segmentation(net, content_img, anno_class_img, transform, device,
-                                          content_img.size[0], content_img.size[1], p_palette, output_folder)
-
-    output_path = os.path.join(output_folder, "anno_class_img.png")
-    anno_class_img.save(output_path)
+                                          content_img.size[0], content_img.size[1], p_palette)
 
     print_class_colors(anno_class_img.convert("P"), p_palette, class_names)
 

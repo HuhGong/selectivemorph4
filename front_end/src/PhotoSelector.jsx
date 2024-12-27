@@ -8,6 +8,8 @@ function PhotoSelector() {
     const [loading, setLoading] = useState(false);
     const [outputImages, setOutputImages] = useState([]); // 여러 출력 이미지 저장
     const [currentSelection, setCurrentSelection] = useState(''); // 현재 선택된 이미지 상태 ('content' 또는 'style')
+    const [selectedIds, setSelectedIds] = useState([]);
+    const [finalImage, setFinalImage] = useState(null); // 최종 이미지 상태 추가
 
     const [contentPhotos, setContentPhotos] = useState([
         {id: 1, src: '', isUpload: true},
@@ -42,16 +44,29 @@ function PhotoSelector() {
     };
 
     const handlePhotoClick = (photo, type) => {
-        if (photo.isUpload) {
-            document.getElementById(`${type}UploadInput`).click();
-        } else {
+        const id = photo.id;
+
+        // 갤러리에서 클릭한 경우에는 selectedIds를 변경하지 않음
+        if (type === 'content' || type === 'style') {
+            // 해당 이미지 클릭 시 contentImage 또는 styleImage 설정
             if (type === 'content') {
                 setContentImage(photo.src);
             } else if (type === 'style') {
                 setStyleImage(photo.src);
             }
+            return; // ID 리스트를 변경하지 않고 종료
         }
+
+        // 일반 클릭 처리 (outputImages 클릭 등)
+        setSelectedIds(prevIds => {
+            if (prevIds.includes(id)) {
+                return prevIds.filter(existingId => existingId !== id);
+            } else {
+                return [...prevIds, id];
+            }
+        });
     };
+
 
 
     const handleFileUploadToBackend = async () => {
@@ -84,11 +99,16 @@ function PhotoSelector() {
                 alert('이미지 업로드가 완료되었습니다!');
 
                 if (data.outputImages) {
-                    // 타임스탬프를 추가하여 캐시 방지
-                    const newOutputImages = data.outputImages.map(imagePath =>
-                        `http://localhost:5000${imagePath}?t=${new Date().getTime()}`
-                    );
-                    setOutputImages(newOutputImages);
+                    // // 타임스탬프를 추가하여 캐시 방지
+                    // const newOutputImages = data.outputImages.map(imagePath =>
+                    //     `http://localhost:5000${imagePath}?t=${new Date().getTime()}`
+                    // );
+                    // setOutputImages(newOutputImages);
+                    const absoluteImagePaths = data.outputImages.map((imagePath, index) => ({
+                        id: index, // ID 설정
+                        path: `http://localhost:5000${imagePath}` // 절대 경로 설정
+                    }));
+                    setOutputImages(absoluteImagePaths); // 상태 업데이트
                 } else {
                     console.error('Output images are undefined.');
                     alert('서버에서 출력 이미지를 받지 못했습니다.');
@@ -106,8 +126,37 @@ function PhotoSelector() {
         }
     };
 
+    const handleClassTransfer = async () => {
+        setLoading(true);
+        try {
+            console.log('Selected IDs before sending:', selectedIds);
 
-    // 이미지 경로를 Base64로 변환하는 함수
+            const response = await fetch('http://localhost:5000/transfer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ selectedClasses: selectedIds }),
+            });
+
+            console.log('Server response:', response);  // 서버 응답 로그
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Transfer data:', data);  // 데이터 로그
+                setFinalImage(`http://localhost:5000${data.finalImagePath}`); // finalImage 업데이트
+                alert('클래스 트랜스퍼가 완료되었습니다!');
+            } else {
+                const errorData = await response.json();
+                alert(`클래스 트랜스퍼 실패: ${errorData.message || response.statusText}`);
+            }
+        } catch (error) {
+            alert('클래스 트랜스퍼 중 오류가 발생했습니다.');
+            console.error('Transfer error:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const convertToBase64 = (url) => {
         return new Promise((resolve, reject) => {
             fetch(url)
@@ -123,8 +172,30 @@ function PhotoSelector() {
     };
 
     const toggleSelection = (type) => {
-        setCurrentSelection(type); // 'content' 또는 'style'을 현재 선택으로 설정
+        setCurrentSelection(type);
     };
+
+    const handleGeneratedImageClick = (index) => {
+        const imageObj = outputImages[index]; // 클릭한 이미지 객체 가져오기
+        const imagePath = imageObj.path; // 이미지 경로 가져오기
+
+        // 파일 경로에서 ID 추출
+        const match = imagePath.match(/anno_class_img_(\d+)\.png$/);
+        const id = match ? match[1] : null; // ID를 추출
+
+        if (id !== null) {
+            setSelectedIds(prevIds => {
+                if (prevIds.includes(id)) {
+                    return prevIds.filter(existingId => existingId !== id); // 이미 존재하면 제거
+                } else {
+                    return [...prevIds, id]; // 없으면 추가
+                }
+            });
+        }
+    };
+
+
+
 
     return (
         <div className="container">
@@ -183,23 +254,23 @@ function PhotoSelector() {
                             disabled={loading}>
                         {loading ? '업로드 중...' : '스타일 전송을 위한 업로드'}
                     </button>
-
-
-                    {outputImages.length > 0 && (
-                        <div className="result-container">
-                            <h4>생성된 이미지:</h4>
-                            {outputImages.map((image, index) => (
-                                <div key={index}>
-                                    <img
-                                        src={image}
-                                        alt={`Generated Output ${index}`}
-                                        className="result-preview1"
-                                    />
-                                    <button className="download-button">Download</button>
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                    <div className="right-section">
+                        {outputImages.length > 0 && (
+                            <div className="result-container">
+                                <h4>생성된 이미지:</h4>
+                                {outputImages.map((imageObj, index) => (
+                                    <div key={index} onClick={() => handleGeneratedImageClick(index)}>
+                                        <img
+                                            src={imageObj.path} // 이미지 경로 사용
+                                            alt={`Generated Output ${index}`}
+                                            className="result-preview1"
+                                        />
+                                        <button className="download-button">Download</button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
@@ -214,7 +285,7 @@ function PhotoSelector() {
                                 <div
                                     key={photo.id}
                                     onClick={() => handlePhotoClick(photo, 'content')}
-                                    className="thumbnail"
+                                    className={`thumbnail ${selectedIds.includes(photo.id) ? 'selected' : ''}`}
                                 >
                                     {photo.isUpload ? (
                                         <div className="thumbnail">
@@ -229,7 +300,7 @@ function PhotoSelector() {
                                 id="contentUploadInputGallery"
                                 type="file"
                                 accept="image/*"
-                                style={{display: 'none'}}
+                                style={{ display: 'none' }}
                                 onChange={(e) => handleImageUpload(e, 'content')}
                             />
                         </div>
@@ -244,14 +315,14 @@ function PhotoSelector() {
                                 <div
                                     key={photo.id}
                                     onClick={() => handlePhotoClick(photo, 'style')}
-                                    className="thumbnail"
+                                    className={`thumbnail ${selectedIds.includes(photo.id) ? 'selected' : ''}`}
                                 >
                                     {photo.isUpload ? (
                                         <div className="thumbnail">
-                                            <FaUpload style={{fontSize: '24px', color: '#888'}}/>
+                                            <FaUpload style={{ fontSize: '24px', color: '#888' }} />
                                         </div>
                                     ) : (
-                                        <img src={photo.src} alt="Thumbnail" className="thumbnail-image"/>
+                                        <img src={photo.src} alt="Thumbnail" className="thumbnail-image" />
                                     )}
                                 </div>
                             ))}
@@ -259,13 +330,39 @@ function PhotoSelector() {
                                 id="styleUploadInputGallery"
                                 type="file"
                                 accept="image/*"
-                                style={{display: 'none'}}
+                                style={{ display: 'none' }}
                                 onChange={(e) => handleImageUpload(e, 'style')}
                             />
                         </div>
                     </>
                 )}
             </div>
+
+            {/* 클릭한 이미지 번호 리스트 표시 */}
+            {selectedIds.length > 0 && (
+                <div className="image-number-display">
+                    <h4>클릭한 이미지 번호:</h4>
+                    <ul>
+                        {selectedIds.sort((a, b) => a - b).map(id => ( // ID를 오름차순으로 정렬
+                            <li key={id}>{id}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
+
+            {/* 클래스를 트랜스퍼 버튼 */}
+            <button className="btn btn-primary" onClick={handleClassTransfer}>
+                클래스를 트랜스퍼
+            </button>
+
+            {/* 최종 이미지 표시 */}
+            {finalImage && (
+                <div className="final-image-display">
+                    <h4>최종 이미지:</h4>
+                    <img src={finalImage} alt="Final Combined" className="result-preview1" />
+                </div>
+            )}
         </div>
     );
 }
