@@ -11,13 +11,15 @@ function App() {
     return (
         <Router>
             <div>
-                <Cover />
-                {/*-<Header />*/}
+                {/*<Cover />*/}
+                <Header />
                 <div className="main-container">
                     <Routes>
-                        <Route path="/" element={<Cover><Scroll /></Cover>} />
-                        <Route path="/transfer" element={<Cover><PhotoSelector /></Cover>} />
+                        {/*<Route path="/" element={<Cover><Scroll /></Cover>} />*/}
+                        {/*<Route path="/transfer" element={<Cover><PhotoSelector /></Cover>} />*/}
                         {/* 다른 경로에 대한 Route 추가 가능 */}
+                        <Route path="/" element={<Scroll />} />
+                        <Route path="/transfer" element={<PhotoSelector />} />
                     </Routes>
                 </div>
             </div>

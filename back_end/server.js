@@ -7,15 +7,15 @@ const {exec} = require('child_process');
 
 const app = express();
 const PORT = 5000;
-
+require('dotenv').config();
 // CORS 설정
 app.use(cors({
     origin: '*', // 모든 출처 허용
     methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type'],
+    allowedHeaders: ['Content-Type', 'Cache-Control', 'Pragma'],
 }));
 
-const python_interpreter = "C:\\Users\\edu49\\miniconda3\\envs\\selectivemorh\\python.exe"
+const python_interpreter = process.env.PYTHON_INTERPRETER;
 
 // 요청 본문 크기 제한 설정 (30MB로 설정)
 app.use(express.json({limit: '30mb'}));
@@ -31,38 +31,54 @@ app.use('/output/anno', express.static(path.join(__dirname, 'output', 'anno')));
 app.post('/upload', async (req, res) => {
     const {contentImage, styleImage} = req.body;
 
-    // 요청 데이터 유효성 검사
     if (!contentImage || !styleImage) {
         return res.status(400).json({message: 'Content Image and Style Image are required.'});
     }
 
-    console.log('Upload request received:', {contentImage, styleImage});
+    console.log('Upload request received:', { contentImage, styleImage });
 
     const uploadsDir = path.join(__dirname, 'uploads');
     const contentImageDir = path.join(uploadsDir, 'contentImage');
     const styleImageDir = path.join(uploadsDir, 'styleImage');
     const outputImageDir = path.join(__dirname, 'output');
-
-    // 필요한 디렉토리 생성
-    fs.mkdirSync(contentImageDir, {recursive: true});
-    fs.mkdirSync(styleImageDir, {recursive: true});
-    fs.mkdirSync(outputImageDir, {recursive: true});
-
-    const contentImagePath = path.join(contentImageDir, 'contentImage.png');
-    const styleImagePath = path.join(styleImageDir, 'styleImage.png');
+    const outputAnnoDir = path.join(__dirname, 'output', 'anno');
 
     try {
-        // Base64 데이터를 Buffer로 변환
+        // 디렉토리가 없으면 생성
+        [contentImageDir, styleImageDir, outputImageDir, outputAnnoDir].forEach(dir => {
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, {recursive: true});
+            }
+        });
+
+        // 기존 파일 삭제 함수
+        const clearDirectory = (dir) => {
+            if (fs.existsSync(dir)) {
+                fs.readdirSync(dir).forEach(file => {
+                    const filePath = path.join(dir, file);
+                    fs.unlinkSync(filePath);
+                });
+            }
+        };
+
+        // 모든 관련 디렉토리 초기화
+        clearDirectory(contentImageDir);
+        clearDirectory(styleImageDir);
+        clearDirectory(outputAnnoDir);
+
+        const contentImagePath = path.join(contentImageDir, 'contentImage.png');
+        const styleImagePath = path.join(styleImageDir, 'styleImage.png');
+
+        // 이미지 처리 및 저장
         const contentImageBuffer = Buffer.from(contentImage.replace(/^data:image\/\w+;base64,/, ""), 'base64');
         const styleImageBuffer = Buffer.from(styleImage.replace(/^data:image\/\w+;base64,/, ""), 'base64');
 
-        // 이미지 저장
         await sharp(contentImageBuffer).toFile(contentImagePath);
         await sharp(styleImageBuffer).toFile(styleImagePath);
 
         // Python 스크립트 실행
         await new Promise((resolve, reject) => {
-            exec(`"${python_interpreter}"  ${path.join(__dirname, 'segment.py')} "${contentImagePath}" "${styleImagePath}"`,
+            exec(`"${python_interpreter}" ${path.join(__dirname, 'segment.py')} "${contentImagePath}" "${styleImagePath}"`,
                 {
                     env: {...process.env},
                     shell: true
@@ -75,19 +91,21 @@ app.post('/upload', async (req, res) => {
                     if (stderr) {
                         console.error(`Python script stderr: ${stderr}`);
                     }
-                    resolve();
+                    // 파일 시스템 동기화를 위한 지연 추가
+                    setTimeout(() => {
+                        resolve();
+                    }, 1000); // 1초 대기
                 });
         });
 
-        // 변환된 이미지 경로를 Base64 형식으로 반환
-        const outputAnnoDir = path.join(__dirname, 'output', 'anno');
-        const outputFiles = fs.readdirSync(outputAnnoDir)
+        // 새로 생성된 이미지 경로만 반환
+        const newOutputFiles = fs.readdirSync(outputAnnoDir)
             .filter(file => file.endsWith('.png'));
-        const outputImagePaths = outputFiles.map(file => `/output/anno/${file}`);
+        const outputImagePaths = newOutputFiles.map(file => `/output/anno/${file}`);
 
         res.status(200).json({
             message: 'Images uploaded and processed successfully!',
-            outputImages: outputImagePaths, // PNG 파일 경로 반환
+            outputImages: outputImagePaths,
         });
     } catch (error) {
         console.error('Error processing images:', error);
@@ -95,7 +113,68 @@ app.post('/upload', async (req, res) => {
     }
 });
 
-// 서버 코드는 그대로 유지
+// 선택된 이미지 ID 처리 엔드포인트
+app.post('/process-selected', (req, res) => {
+    const { selectedIds } = req.body;
+
+    if (!selectedIds || !Array.isArray(selectedIds)) {
+        return res.status(400).json({ message: 'Selected IDs are required and must be an array.' });
+    }
+
+    console.log('Selected IDs received:', selectedIds);
+
+    res.status(200).json({ message: 'Selected IDs processed successfully!', selectedIds });
+});
+
+
+app.post('/transfer', async (req, res) => {
+    const { selectedClasses } = req.body;
+
+    if (!selectedClasses || !Array.isArray(selectedClasses)) {
+        return res.status(400).json({ message: 'Selected classes are required and must be an array.' });
+    }
+
+    console.log('Selected classes received:', selectedClasses);
+
+    const scriptPath = path.join(__dirname, 'real_final_src_transfer.py');
+    const classesString = selectedClasses.join(' '); // 클래스 리스트를 공백으로 구분된 문자열로 변환
+
+    try {
+        await new Promise((resolve, reject) => {
+            exec(`"${python_interpreter}" "${scriptPath}" ${classesString}`, {
+                env: { ...process.env },
+                shell: true,
+                encoding: 'utf-8'  // 인코딩 설정
+            }, (error, stdout, stderr) => {
+                if (error) {
+                    console.error(`Error executing Python script: ${error.message}`);
+                    return reject(error);
+                }
+                if (stderr) {
+                    console.error(`Python script stderr: ${stderr}`);
+                }
+                console.log(`Python script output: ${stdout}`); // Python 스크립트의 출력 확인
+                resolve();
+            });
+        });
+
+        const finalImagePath = path.join(__dirname, 'output', 'final_combined_image.png');
+
+        if (fs.existsSync(finalImagePath)) {
+            res.status(200).json({
+                message: 'Class transfer completed successfully!',
+                finalImagePath: '/output/final_combined_image.png',
+            });
+        } else {
+            res.status(404).json({ message: 'Final combined image not found.' });
+        }
+    } catch (error) {
+        console.error('Error during class transfer:', error);
+        res.status(500).json({ message: 'Error during class transfer', error: error.message });
+    }
+});
+
+
 app.get('/annotations', (req, res) => {
     const annotationsDir = path.join(__dirname, 'output');
 
