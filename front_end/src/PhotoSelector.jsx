@@ -42,25 +42,31 @@ function PhotoSelector() {
             };
             reader.readAsDataURL(e.target.files[0]);
         }
+        // Reset the file input value
+        e.target.value = null;
     };
 
     const handlePhotoClick = (photo, type) => {
         const id = photo.id;
+
         if (photo.isUpload) {
             document.getElementById(`${type}UploadInput`).click();
+            setSelectedIds([]); // 업로드 버튼 클릭 시 초기화
+            return;
         }
-        // 갤러리에서 클릭한 경우에는 selectedIds를 변경하지 않음
+
+        // content나 style 갤러리 이미지 클릭 시
         if (type === 'content' || type === 'style') {
-            // 해당 이미지 클릭 시 contentImage 또는 styleImage 설정
             if (type === 'content') {
                 setContentImage(photo.src);
             } else if (type === 'style') {
                 setStyleImage(photo.src);
             }
-            return; // ID 리스트를 변경하지 않고 종료
+            setSelectedIds([]); // 갤러리 이미지 클릭 시 초기화
+            return;
         }
 
-        // 일반 클릭 처리 (outputImages 클릭 등)
+        // 생성된 이미지 클릭 시
         setSelectedIds(prevIds => {
             if (prevIds.includes(id)) {
                 return prevIds.filter(existingId => existingId !== id);
@@ -68,7 +74,8 @@ function PhotoSelector() {
                 return [...prevIds, id];
             }
         });
-    };
+    }
+
 
 
     const handleFileUploadToBackend = async () => {
@@ -170,7 +177,12 @@ function PhotoSelector() {
     };
 
     const toggleSelection = (type) => {
-        setCurrentSelection(type);  // 'content' 또는 'style'을 현재 선택으로 설정
+        // 현재 선택된 타입과 같은 타입을 클릭하면 선택 해제
+        if (currentSelection === type) {
+            setCurrentSelection('');
+        } else {
+            setCurrentSelection(type);
+        }
     };
 
 
