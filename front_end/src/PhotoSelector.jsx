@@ -12,6 +12,7 @@ function PhotoSelector() {
     const [selectedIds, setSelectedIds] = useState([]);
     const [finalImage, setFinalImage] = useState(null); // 최종 이미지 상태 추가
 
+
     const [contentPhotos, setContentPhotos] = useState([
         {id: 1, src: '', isUpload: true},
         {id: 2, src: require('./assets/content/image4.jpg')},
@@ -77,7 +78,6 @@ function PhotoSelector() {
     }
 
 
-
     const handleFileUploadToBackend = async () => {
         if (!contentImage || !styleImage) {
             alert('Content Image와 Style Image를 모두 선택해 주세요.');
@@ -134,21 +134,23 @@ function PhotoSelector() {
     const handleClassTransfer = async () => {
         setLoading(true);
         try {
-            console.log('Selected IDs before sending:', selectedIds);
-
             const response = await fetch('http://localhost:5000/transfer', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({selectedClasses: selectedIds}),
+                body: JSON.stringify({
+                    selectedClasses: selectedIds,
+                }),
             });
 
-            console.log('Server response:', response);  // 서버 응답 로그
             if (response.ok) {
                 const data = await response.json();
-                console.log('Transfer data:', data);  // 데이터 로그
-                setFinalImage(`http://localhost:5000${data.finalImagePath}`); // finalImage 업데이트
+                // 타임스탬프를 추가하여 강제로 새로운 이미지 로드
+                const timestamp = new Date().getTime();
+                setFinalImage(`http://localhost:5000${data.finalImagePath}?t=${timestamp}`);
+                // 선택된 클래스 초기화
+                setSelectedIds([]);
                 alert('클래스 트랜스퍼가 완료되었습니다!');
             } else {
                 const errorData = await response.json();
@@ -161,6 +163,7 @@ function PhotoSelector() {
             setLoading(false);
         }
     };
+
 
     const convertToBase64 = (url) => {
         return new Promise((resolve, reject) => {
@@ -180,8 +183,10 @@ function PhotoSelector() {
         // 현재 선택된 타입과 같은 타입을 클릭하면 선택 해제
         if (currentSelection === type) {
             setCurrentSelection('');
+
         } else {
             setCurrentSelection(type);
+
         }
     };
 

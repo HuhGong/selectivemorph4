@@ -130,21 +130,22 @@ app.post('/process-selected', (req, res) => {
 app.post('/transfer', async (req, res) => {
     const { selectedClasses } = req.body;
 
-    if (!selectedClasses || !Array.isArray(selectedClasses)) {
-        return res.status(400).json({ message: 'Selected classes are required and must be an array.' });
-    }
-
-    console.log('Selected classes received:', selectedClasses);
-
-    const scriptPath = path.join(__dirname, 'real_final_src_transfer.py');
-    const classesString = selectedClasses.join(' '); // 클래스 리스트를 공백으로 구분된 문자열로 변환
+    // selectedClasses가 빈 배열이면 transfer.py를 실행하고,
+    // 그렇지 않으면 real_final_src_transfer.py를 실행
+    const scriptPath = selectedClasses.length === 0
+        ? path.join(__dirname, 'transfer.py')
+        : path.join(__dirname, 'real_final_src_transfer.py');
 
     try {
+        const command = selectedClasses.length === 0
+            ? `"${python_interpreter}" "${scriptPath}"`
+            : `"${python_interpreter}" "${scriptPath}" ${selectedClasses.join(' ')}`;
+
         await new Promise((resolve, reject) => {
-            exec(`"${python_interpreter}" "${scriptPath}" ${classesString}`, {
+            exec(command, {
                 env: { ...process.env },
                 shell: true,
-                encoding: 'utf-8'  // 인코딩 설정
+                encoding: 'utf-8'
             }, (error, stdout, stderr) => {
                 if (error) {
                     console.error(`Error executing Python script: ${error.message}`);
@@ -153,7 +154,7 @@ app.post('/transfer', async (req, res) => {
                 if (stderr) {
                     console.error(`Python script stderr: ${stderr}`);
                 }
-                console.log(`Python script output: ${stdout}`); // Python 스크립트의 출력 확인
+                console.log(`Python script output: ${stdout}`);
                 resolve();
             });
         });
@@ -162,17 +163,18 @@ app.post('/transfer', async (req, res) => {
 
         if (fs.existsSync(finalImagePath)) {
             res.status(200).json({
-                message: 'Class transfer completed successfully!',
+                message: 'Transfer completed successfully!',
                 finalImagePath: '/output/final_combined_image.png',
             });
         } else {
             res.status(404).json({ message: 'Final combined image not found.' });
         }
     } catch (error) {
-        console.error('Error during class transfer:', error);
-        res.status(500).json({ message: 'Error during class transfer', error: error.message });
+        console.error('Error during transfer:', error);
+        res.status(500).json({ message: 'Error during transfer', error: error.message });
     }
 });
+
 
 
 app.get('/annotations', (req, res) => {
