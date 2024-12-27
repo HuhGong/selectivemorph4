@@ -42,22 +42,19 @@ app.post('/upload', async (req, res) => {
     const outputAnnoDir = path.join(__dirname, 'output', 'anno');
 
     try {
-        // 디렉토리 생성
-        fs.mkdirSync(contentImageDir, {recursive: true});
-        fs.mkdirSync(styleImageDir, {recursive: true});
-        fs.mkdirSync(outputImageDir, {recursive: true});
-        fs.mkdirSync(outputAnnoDir, {recursive: true});
+        // 디렉토리가 없으면 생성
+        [contentImageDir, styleImageDir, outputImageDir, outputAnnoDir].forEach(dir => {
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, {recursive: true});
+            }
+        });
 
-        // 기존 파일들 모두 삭제
+        // 기존 파일 삭제 함수
         const clearDirectory = (dir) => {
             if (fs.existsSync(dir)) {
                 fs.readdirSync(dir).forEach(file => {
                     const filePath = path.join(dir, file);
-                    if (fs.statSync(filePath).isDirectory()) {
-                        clearDirectory(filePath); // 중첩 디렉토리 처리
-                    } else {
-                        fs.unlinkSync(filePath);
-                    }
+                    fs.unlinkSync(filePath);
                 });
             }
         };
@@ -76,16 +73,6 @@ app.post('/upload', async (req, res) => {
 
         await sharp(contentImageBuffer).toFile(contentImagePath);
         await sharp(styleImageBuffer).toFile(styleImagePath);
-
-        // Python 스크립트 실행 전에 output/anno 디렉토리의 모든 파일 삭제
-        if (fs.existsSync(outputAnnoDir)) {
-            const files = fs.readdirSync(outputAnnoDir);
-            for (const file of files) {
-                fs.unlinkSync(path.join(outputAnnoDir, file));
-            }
-        } else {
-            fs.mkdirSync(outputAnnoDir, {recursive: true});
-        }
 
         // Python 스크립트 실행
         await new Promise((resolve, reject) => {

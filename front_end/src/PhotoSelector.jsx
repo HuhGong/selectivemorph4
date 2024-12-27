@@ -53,6 +53,7 @@ function PhotoSelector() {
         }
     };
 
+
     const handleFileUploadToBackend = async () => {
         if (!contentImage || !styleImage) {
             alert('Content Image와 Style Image를 모두 선택해 주세요.');
@@ -179,7 +180,8 @@ function PhotoSelector() {
                             disabled={loading}>
                         {loading ? '업로드 중...' : '스타일 전송을 위한 업로드'}
                     </button>
-                    <div className="right-section">
+
+
                         {outputImages.length > 0 && (
                             <div className="result-container">
                                 <h4>생성된 이미지:</h4>
@@ -197,7 +199,7 @@ function PhotoSelector() {
                         )}
                     </div>
                 </div>
-            </div>
+
 
             {/* Right Section */}
             <div className="right-section">
