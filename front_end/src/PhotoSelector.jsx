@@ -173,45 +173,27 @@ function PhotoSelector() {
         setCurrentSelection(type);  // 'content' 또는 'style'을 현재 선택으로 설정
     };
 
-    // const handleGeneratedImageClick = (index) => {
-    //     const imageObj = outputImages[index]; // 클릭한 이미지 객체 가져오기
-    //     const imagePath = imageObj.path; // 이미지 경로 가져오기
-    //
-    //     // 파일 경로에서 ID 추출
-    //     const match = imagePath.match(/anno_class_img_(\d+)\.png$/);
-    //     const id = match ? match[1] : null; // ID를 추출
-    //
-    //     if (id !== null) {
-    //         setSelectedIds(prevIds => {
-    //             if (prevIds.includes(id)) {
-    //                 return prevIds.filter(existingId => existingId !== id); // 이미 존재하면 제거
-    //             } else {
-    //                 return [...prevIds, id]; // 없으면 추가
-    //             }
-    //         });
-    //     }
-    // };
 
     const handleGeneratedImageClick = (index) => {
         const imageObj = outputImages[index];
-        // 이미지 경로에서 클래스 번호를 추출
         const match = imageObj.path.match(/anno_class_img_(\d+)\.png/);
 
-        // 이미지 요소에 selected 클래스 토글
-        const imageElement = document.querySelector(`[data-index="${index}"]`);
-        if (imageElement) {
-            imageElement.classList.toggle('selected');
-        }
-
         if (match) {
-            const id = parseInt(match[1]); // 문자열을 숫자로 변환
+            const id = parseInt(match[1]);
             setSelectedIds(prevIds => {
+                // 이미 선택된 ID인 경우 해당 ID를 제외한 배열 반환
                 if (prevIds.includes(id)) {
                     return prevIds.filter(existingId => existingId !== id);
-                } else {
-                    return [...prevIds, id];
                 }
+                // 선택되지 않은 경우 새로운 ID 추가
+                return [...prevIds, id];
             });
+
+            // 이미지 요소에 selected 클래스 토글
+            const imageElement = document.querySelector(`[data-index="${index}"]`);
+            if (imageElement) {
+                imageElement.classList.toggle('selected');
+            }
         }
     };
 
