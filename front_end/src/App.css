@@ -111,6 +111,7 @@
   height: auto;
   border: 1px solid #ccc;
   border-radius: 15px; /* 컨테이너의 모서리를 둥글게 */
+  display: flex;
 
 }
 .placeholder {
@@ -172,9 +173,11 @@
 }
 .result-container {
   display: flex;
-  flex-direction: column; /* 세로 배치 */
+  flex-direction: row; /* 세로 배치 */
   align-items: center; /* 중앙 정렬 */
   margin-top: 20px;
+
+  flex-wrap: wrap; /* 가로 공간이 부족하면 다음 줄로 배치 */
 }
 
 .download-button {

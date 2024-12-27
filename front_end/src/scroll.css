@@ -13,6 +13,7 @@ html, body {
     width: 600px;
     height: 400px;
     border: 2px solid #333;
+    margin: 100px auto 20px; /* 상단 여백 100px, 하단 여백 20px, 중앙 정렬 */
 }
 
 .image-wrapper {
@@ -85,6 +86,7 @@ html, body {
 .button-container {
     display: flex;
     gap: 10px;
+    justify-content: center; /* 버튼 가로 중앙 정렬 */
 }
 
 .image-button {
