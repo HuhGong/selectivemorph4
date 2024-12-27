@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {FaUpload} from "react-icons/fa6";
 import {FaImage} from "react-icons/fa";
+import './styles.css';
 
 function PhotoSelector() {
     const [contentImage, setContentImage] = useState(null);
@@ -70,7 +71,6 @@ function PhotoSelector() {
     };
 
 
-
     const handleFileUploadToBackend = async () => {
         if (!contentImage || !styleImage) {
             alert('Content Image와 Style Image를 모두 선택해 주세요.');
@@ -134,7 +134,7 @@ function PhotoSelector() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ selectedClasses: selectedIds }),
+                body: JSON.stringify({selectedClasses: selectedIds}),
             });
 
             console.log('Server response:', response);  // 서버 응답 로그
@@ -196,6 +196,13 @@ function PhotoSelector() {
         const imageObj = outputImages[index];
         // 이미지 경로에서 클래스 번호를 추출
         const match = imageObj.path.match(/anno_class_img_(\d+)\.png/);
+
+        // 이미지 요소에 selected 클래스 토글
+        const imageElement = document.querySelector(`[data-index="${index}"]`);
+        if (imageElement) {
+            imageElement.classList.toggle('selected');
+        }
+
         if (match) {
             const id = parseInt(match[1]); // 문자열을 숫자로 변환
             setSelectedIds(prevIds => {
@@ -207,8 +214,6 @@ function PhotoSelector() {
             });
         }
     };
-
-
 
 
     return (
@@ -272,14 +277,15 @@ function PhotoSelector() {
                         {outputImages.length > 0 && (
                             <div className="result-container">
                                 <h4>생성된 이미지:</h4>
+
                                 {outputImages.map((imageObj, index) => (
                                     <div key={index} onClick={() => handleGeneratedImageClick(index)}>
                                         <img
                                             src={imageObj.path} // 이미지 경로 사용
                                             alt={`Generated Output ${index}`}
                                             className="result-preview1"
+                                            data-index={index}
                                         />
-                                        <button className="download-button">Download</button>
                                     </div>
                                 ))}
                             </div>
@@ -314,7 +320,7 @@ function PhotoSelector() {
                                 id="contentUploadInputGallery"
                                 type="file"
                                 accept="image/*"
-                                style={{ display: 'none' }}
+                                style={{display: 'none'}}
                                 onChange={(e) => handleImageUpload(e, 'content')}
                             />
                         </div>
@@ -333,10 +339,10 @@ function PhotoSelector() {
                                 >
                                     {photo.isUpload ? (
                                         <div className="thumbnail">
-                                            <FaUpload style={{ fontSize: '24px', color: '#888' }} />
+                                            <FaUpload style={{fontSize: '24px', color: '#888'}}/>
                                         </div>
                                     ) : (
-                                        <img src={photo.src} alt="Thumbnail" className="thumbnail-image" />
+                                        <img src={photo.src} alt="Thumbnail" className="thumbnail-image"/>
                                     )}
                                 </div>
                             ))}
@@ -344,7 +350,7 @@ function PhotoSelector() {
                                 id="styleUploadInputGallery"
                                 type="file"
                                 accept="image/*"
-                                style={{ display: 'none' }}
+                                style={{display: 'none'}}
                                 onChange={(e) => handleImageUpload(e, 'style')}
                             />
                         </div>
@@ -374,7 +380,7 @@ function PhotoSelector() {
             {finalImage && (
                 <div className="final-image-display">
                     <h4>최종 이미지:</h4>
-                    <img src={finalImage} alt="Final Combined" className="result-preview1" />
+                    <img src={finalImage} alt="Final Combined" className="result-preview1"/>
                 </div>
             )}
         </div>
