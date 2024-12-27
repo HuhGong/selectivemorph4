@@ -45,25 +45,23 @@ function PhotoSelector() {
     };
 
     const handlePhotoClick = (photo, type) => {
-        if (photo.isUpload) {
-            document.getElementById(`${type}UploadInput`).click();
-        } else {
-            const id = photo.id;
-            setSelectedIds(prevIds => {
-                if (prevIds.includes(id)) {
-                    return prevIds.filter(existingId => existingId !== id);
-                } else {
-                    return [...prevIds, id];
-                }
-            });
-
-            if (type === 'content') {
-                setContentImage(photo.src);
-            } else if (type === 'style') {
-                setStyleImage(photo.src);
+        const id = photo.id;
+        setSelectedIds(prevIds => {
+            if (prevIds.includes(id)) {
+                return prevIds.filter(existingId => existingId !== id);
+            } else {
+                return [...prevIds, id];
             }
+        });
+
+        // 해당 이미지 클릭 시 contentImage 또는 styleImage 설정
+        if (type === 'content') {
+            setContentImage(photo.src);
+        } else if (type === 'style') {
+            setStyleImage(photo.src);
         }
     };
+
 
     const handleFileUploadToBackend = async () => {
         if (!contentImage || !styleImage) {
@@ -113,12 +111,15 @@ function PhotoSelector() {
     const handleClassTransfer = async () => {
         setLoading(true);
         try {
+            // 전송하기 전에 selectedIds 출력
+            console.log('Selected IDs before sending:', selectedIds);
+
             const response = await fetch('http://localhost:5000/transfer', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ selectedClasses: selectedIds }), // 여기에서 selectedIds 사용
+                body: JSON.stringify({ selectedClasses: selectedIds }), // 선택된 클래스 리스트 전송
             });
 
             if (response.ok) {
@@ -135,6 +136,7 @@ function PhotoSelector() {
             setLoading(false);
         }
     };
+
 
 
     const convertToBase64 = (url) => {
