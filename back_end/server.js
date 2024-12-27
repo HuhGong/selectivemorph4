@@ -12,7 +12,7 @@ require('dotenv').config();
 app.use(cors({
     origin: '*', // 모든 출처 허용
     methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type'],
+    allowedHeaders: ['Content-Type', 'Cache-Control', 'Pragma'],
 }));
 
 const python_interpreter = process.env.PYTHON_INTERPRETER;

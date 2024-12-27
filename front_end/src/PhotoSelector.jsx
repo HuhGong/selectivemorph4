@@ -69,6 +69,9 @@ function PhotoSelector() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    // 캐시 방지를 위한 헤더 추가
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
                 },
                 body: JSON.stringify({
                     contentImage: contentImage.startsWith('data:image/') ? contentImage : await convertToBase64(contentImage),
@@ -81,11 +84,11 @@ function PhotoSelector() {
                 alert('이미지 업로드가 완료되었습니다!');
 
                 if (data.outputImages) {
-                    const absoluteImagePaths = data.outputImages.map(imagePath =>
-                        `http://localhost:5000${imagePath}`
+                    // 타임스탬프를 추가하여 캐시 방지
+                    const newOutputImages = data.outputImages.map(imagePath =>
+                        `http://localhost:5000${imagePath}?t=${new Date().getTime()}`
                     );
-                    // 새로운 이미지로 상태를 완전히 교체
-                    setOutputImages(absoluteImagePaths);
+                    setOutputImages(newOutputImages);
                 } else {
                     console.error('Output images are undefined.');
                     alert('서버에서 출력 이미지를 받지 못했습니다.');
@@ -182,23 +185,23 @@ function PhotoSelector() {
                     </button>
 
 
-                        {outputImages.length > 0 && (
-                            <div className="result-container">
-                                <h4>생성된 이미지:</h4>
-                                {outputImages.map((image, index) => (
-                                    <div key={index}>
-                                        <img
-                                            src={image}
-                                            alt={`Generated Output ${index}`}
-                                            className="result-preview1"
-                                        />
-                                        <button className="download-button">Download</button>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                    {outputImages.length > 0 && (
+                        <div className="result-container">
+                            <h4>생성된 이미지:</h4>
+                            {outputImages.map((image, index) => (
+                                <div key={index}>
+                                    <img
+                                        src={image}
+                                        alt={`Generated Output ${index}`}
+                                        className="result-preview1"
+                                    />
+                                    <button className="download-button">Download</button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
+            </div>
 
 
             {/* Right Section */}
