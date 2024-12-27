@@ -45,7 +45,9 @@ function PhotoSelector() {
 
     const handlePhotoClick = (photo, type) => {
         const id = photo.id;
-
+        if (photo.isUpload) {
+            document.getElementById(`${type}UploadInput`).click();
+        }
         // 갤러리에서 클릭한 경우에는 selectedIds를 변경하지 않음
         if (type === 'content' || type === 'style') {
             // 해당 이미지 클릭 시 contentImage 또는 styleImage 설정
@@ -84,9 +86,9 @@ function PhotoSelector() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // 캐시 방지를 위한 헤더 추가
-                    'Cache-Control': 'no-cache',
-                    'Pragma': 'no-cache'
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
                 },
                 body: JSON.stringify({
                     contentImage: contentImage.startsWith('data:image/') ? contentImage : await convertToBase64(contentImage),
@@ -99,14 +101,10 @@ function PhotoSelector() {
                 alert('이미지 업로드가 완료되었습니다!');
 
                 if (data.outputImages) {
-                    // // 타임스탬프를 추가하여 캐시 방지
-                    // const newOutputImages = data.outputImages.map(imagePath =>
-                    //     `http://localhost:5000${imagePath}?t=${new Date().getTime()}`
-                    // );
-                    // setOutputImages(newOutputImages);
                     const absoluteImagePaths = data.outputImages.map((imagePath, index) => ({
                         id: index, // ID 설정
-                        path: `http://localhost:5000${imagePath}` // 절대 경로 설정
+                        // 타임스탬프를 추가하여 캐시 방지
+                        path: `http://localhost:5000${imagePath}?t=${new Date().getTime()}`
                     }));
                     setOutputImages(absoluteImagePaths); // 상태 업데이트
                 } else {
@@ -172,23 +170,39 @@ function PhotoSelector() {
     };
 
     const toggleSelection = (type) => {
-        setCurrentSelection(type);
+        setCurrentSelection(type);  // 'content' 또는 'style'을 현재 선택으로 설정
     };
 
+    // const handleGeneratedImageClick = (index) => {
+    //     const imageObj = outputImages[index]; // 클릭한 이미지 객체 가져오기
+    //     const imagePath = imageObj.path; // 이미지 경로 가져오기
+    //
+    //     // 파일 경로에서 ID 추출
+    //     const match = imagePath.match(/anno_class_img_(\d+)\.png$/);
+    //     const id = match ? match[1] : null; // ID를 추출
+    //
+    //     if (id !== null) {
+    //         setSelectedIds(prevIds => {
+    //             if (prevIds.includes(id)) {
+    //                 return prevIds.filter(existingId => existingId !== id); // 이미 존재하면 제거
+    //             } else {
+    //                 return [...prevIds, id]; // 없으면 추가
+    //             }
+    //         });
+    //     }
+    // };
+
     const handleGeneratedImageClick = (index) => {
-        const imageObj = outputImages[index]; // 클릭한 이미지 객체 가져오기
-        const imagePath = imageObj.path; // 이미지 경로 가져오기
-
-        // 파일 경로에서 ID 추출
-        const match = imagePath.match(/anno_class_img_(\d+)\.png$/);
-        const id = match ? match[1] : null; // ID를 추출
-
-        if (id !== null) {
+        const imageObj = outputImages[index];
+        // 이미지 경로에서 클래스 번호를 추출
+        const match = imageObj.path.match(/anno_class_img_(\d+)\.png/);
+        if (match) {
+            const id = parseInt(match[1]); // 문자열을 숫자로 변환
             setSelectedIds(prevIds => {
                 if (prevIds.includes(id)) {
-                    return prevIds.filter(existingId => existingId !== id); // 이미 존재하면 제거
+                    return prevIds.filter(existingId => existingId !== id);
                 } else {
-                    return [...prevIds, id]; // 없으면 추가
+                    return [...prevIds, id];
                 }
             });
         }
