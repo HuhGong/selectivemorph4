@@ -112,7 +112,7 @@ app.post('/transfer', async (req, res) => {
     console.log('Selected classes received:', selectedClasses);
 
     const scriptPath = path.join(__dirname, 'real_final_src_transfer.py');
-    const classesString = selectedClasses.join(','); // 클래스 리스트를 문자열로 변환
+    const classesString = selectedClasses.join(' '); // 클래스 리스트를 공백으로 구분된 문자열로 변환
 
     try {
         await new Promise((resolve, reject) => {
@@ -127,6 +127,7 @@ app.post('/transfer', async (req, res) => {
                 if (stderr) {
                     console.error(`Python script stderr: ${stderr}`);
                 }
+                console.log(`Python script output: ${stdout}`); // Python 스크립트의 출력 확인
                 resolve();
             });
         });
@@ -147,7 +148,8 @@ app.post('/transfer', async (req, res) => {
     }
 });
 
-// 서버 코드 유지
+
+
 app.get('/annotations', (req, res) => {
     const annotationsDir = path.join(__dirname, 'output');
 

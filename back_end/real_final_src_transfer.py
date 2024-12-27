@@ -8,13 +8,21 @@ from PIL import Image
 import os
 
 import sys
+
 # 전달된 인자들
-selected_classes = sys.argv[1:]
+selected_classes = sys.argv[1:]  # 공백으로 구분된 인자들
+
 # 클래스 ID를 int로 변환
 selected_classes = [int(cls_id) for cls_id in selected_classes if cls_id.isdigit()]
+
 print("Selected classes:", selected_classes)
+print(type(selected_classes))
 
 target_class_ids = selected_classes
+#
+# target_class_ids = [13, 15]
+
+# exit()
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
