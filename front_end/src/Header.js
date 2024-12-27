@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 
 const Header = () => {
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top"
+             style={{ padding: '1.0rem', fontSize: '1.5rem' }}>
             <div className="container-fluid">
                 <Link className="navbar-brand" to="/">2조프로젝트</Link>
                 <button

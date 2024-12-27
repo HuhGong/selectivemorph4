@@ -193,3 +193,15 @@
 .download-button:hover {
   background-color: #0056b3;
 }
+.generated-image-section {
+  display: block;
+}
+
+.generated-image-section.active {
+  display: block;
+}
+
+.content-gallery.hidden, .style-gallery.hidden {
+  display: none;
+}
+
