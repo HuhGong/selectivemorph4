@@ -2,7 +2,7 @@
 <module type="WEB_MODULE" version="4">
   <component name="FacetManager">
     <facet type="Python" name="Python facet">
-      <configuration sdkName="style" />
+      <configuration sdkName="selectivemorph4" />
     </facet>
   </component>
   <component name="NewModuleRootManager">
@@ -13,8 +13,8 @@
       <excludeFolder url="file://$MODULE_DIR$/back_end/VOC2012" />
       <excludeFolder url="file://$MODULE_DIR$/back_end/output" />
     </content>
-    <orderEntry type="jdk" jdkName="kaka" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="selectivemorph4" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="style interpreter library" level="application" />
+    <orderEntry type="library" name="selectivemorph4 interpreter library" level="application" />
   </component>
 </module>

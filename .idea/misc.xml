@@ -3,4 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="style" />
   </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="selectivemorph4" project-jdk-type="Python SDK" />
 </project>

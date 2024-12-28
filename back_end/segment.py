@@ -81,11 +81,23 @@ def image_loader(image, resize=None):
 
 
 def load_pspnet_model(weights_path):
-    net = PSPNet(n_classes=21)
+    # First load the model with 150 classes (ADE20K)
+    net = PSPNet(n_classes=150)
     state_dict = torch.load(weights_path, weights_only=True)
-    net.load_state_dict(state_dict)
+
+    # Create new state dict excluding classification layers
+    new_state_dict = {}
+    for k, v in state_dict.items():
+        if 'classification' not in k:  # Keep all non-classification layers
+            new_state_dict[k] = v
+
+    # Initialize the model with 21 classes (VOC2012)
+    net = PSPNet(n_classes=21)
+    # Load the modified state dict with strict=False to allow missing keys
+    net.load_state_dict(new_state_dict, strict=False)
     net.eval()
     return net.to(device)
+
 
 def setup_output_folder():
     output_folder = "output\\anno"

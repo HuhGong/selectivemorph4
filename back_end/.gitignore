@@ -6,3 +6,4 @@
 /output
 /VOC2012
 package-lock.json
+.env
