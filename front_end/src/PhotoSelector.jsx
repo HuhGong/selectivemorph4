@@ -368,26 +368,28 @@ function PhotoSelector() {
                 {/* 최종 이미지 표시 */}
                 {finalImage && (
                     <div className="final-image-display">
-                        <h4>최종 이미지:</h4>
+                        <h4>최종 이미지</h4>
                         <img src={finalImage} alt="Final Combined" className="result-preview1"/>
                     </div>
                 )}
             </div>
-            <div className="result-container">
-                <h4>생성된 이미지:</h4>
-                <div className="generated-images-wrapper">
-                    {outputImages.map((imageObj, index) => (
-                        <div key={index} onClick={() => handleGeneratedImageClick(index)}>
-                            <img
-                                src={imageObj.path}
-                                alt={`Generated Output ${index}`}
-                                className="result-preview1"
-                                data-index={index}
-                            />
-                        </div>
-                    ))}
+            {outputImages.length > 0 && (
+                <div className="result-container">
+                    <h4>생성된 이미지</h4>
+                    <div className="generated-images-wrapper">
+                        {outputImages.map((imageObj, index) => (
+                            <div key={index} onClick={() => handleGeneratedImageClick(index)}>
+                                <img
+                                    src={imageObj.path}
+                                    alt={`Generated Output ${index}`}
+                                    className="result-preview1"
+                                    data-index={index}
+                                />
+                            </div>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
 
 

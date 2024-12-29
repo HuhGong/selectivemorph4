@@ -58,6 +58,7 @@
 .result-container::-webkit-scrollbar {
     display: none;
 }
+
 .result-container {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -91,6 +92,7 @@
         max-width: 150px;
     }
 }
+
 @media (max-width: 480px) {
     .result-preview1 {
         max-width: 120px;
@@ -101,6 +103,7 @@
         padding: 10px;
     }
 }
+
 .btn {
     padding: 12px 24px;
     border: none;
@@ -144,6 +147,7 @@
         font-size: 0.8rem;
     }
 }
+
 .btn-primary:active {
     transform: translateY(1px);
 }
@@ -176,6 +180,7 @@
         min-width: 140px;
     }
 }
+
 .gallery {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
@@ -228,9 +233,160 @@
         min-height: 150px;
     }
 }
+
 .generated-images-wrapper {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
+}
+
+.image-number-display {
+    background: rgba(33, 150, 243, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 200px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(33, 150, 243, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.image-number-display h4 {
+    color: #2196F3;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    text-align: center;
+    background: linear-gradient(45deg, #2196F3, #00BCD4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.image-number-display ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.image-number-display li {
+    background: rgba(33, 150, 243, 0.2);
+    padding: 8px 15px;
+    border-radius: 20px;
+    color: white;
+    font-weight: 500;
+    width: 80%;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.image-number-display li:hover {
+    transform: translateX(5px);
+    background: rgba(33, 150, 243, 0.4);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+@media (max-width: 768px) {
+    .image-number-display {
+        padding: 15px;
+        margin: 15px auto;
+        max-width: 150px;
+    }
+
+    .image-number-display h4 {
+        font-size: 1rem;
+    }
+
+    .image-number-display li {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+}
+
+.right-section {
+    min-height: 100vh;
+    height: fit-content;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.right-section h3 {
+    text-align: center;
+    margin: 20px auto;
+    color: #2196F3;
+    font-size: 1.8rem;
+    background: linear-gradient(45deg, #2196F3, #00BCD4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 10px;
+    width: fit-content;
+}
+/* 공통 스타일 */
+h3 {
+    text-align: center;
+    margin: 20px auto;
+    font-size: 1.8rem;
+    background: linear-gradient(45deg, #2196F3, #00BCD4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 10px;
+    width: fit-content;
+    height: 50px; /* 고정 높이 설정 */
+    line-height: 50px; /* 수직 정렬을 위한 line-height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 미디어 쿼리 추가 */
+@media (max-width: 768px) {
+    h3 {
+        font-size: 1.5rem;
+        height: 40px;
+        line-height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    h3 {
+        font-size: 1.2rem;
+        height: 35px;
+        line-height: 35px;
+    }
+}
+h4 {
+    text-align: center;
+    margin: 20px auto;
+    font-size: 1.8rem;
+    background: linear-gradient(45deg, #2196F3, #00BCD4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 10px;
+    width: fit-content;
+    height: 50px;
+    line-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    h4 {
+        font-size: 1.5rem;
+        height: 40px;
+        line-height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    h4 {
+        font-size: 1.2rem;
+        height: 35px;
+        line-height: 35px;
+    }
 }

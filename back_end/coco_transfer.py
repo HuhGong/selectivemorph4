@@ -28,10 +28,10 @@ logger.info("Type of selected_classes: %s", type(selected_classes))  # 출력
 target_class_ids = selected_classes
 
 
-os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True,max_split_size_mb:128"
+# os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True,max_split_size_mb:128"
 # Define constants
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-torch.cuda.empty_cache()  #
+# torch.cuda.empty_cache()  #
 
 torch.set_default_device(device)
 custom_size = (720, 720)
@@ -216,14 +216,14 @@ def process_segmentation(net, content_img, transform, device, content_img_width,
     im = F.interpolate(im, size=new_size, align_corners=False, mode='bilinear')
     # 메모리 효율을 위해 즉시 처리
     out = net(im)[0]
-    im = None  # 사용이 끝난 변수 즉시 해제
-    torch.cuda.empty_cache()
+    # im = None  # 사용이 끝난 변수 즉시 해제
+    # torch.cuda.empty_cache()
 
     out = F.interpolate(out, size=org_size, align_corners=False, mode='bilinear')
     # segmentation_map = out.argmax(dim=1) # out 결과가 segmentation map 결과.
     segmentation_map = out.argmax(dim=1).squeeze().detach().cpu().numpy()
-    out = None  # 사용이 끝난 변수 즉시 해제
-    torch.cuda.empty_cache()
+    # out = None  # 사용이 끝난 변수 즉시 해제
+    # torch.cuda.empty_cache()
     # 모델 클래스 ID -> COCO 클래스 ID 매핑
     model_to_coco_id = {i: coco_id for i, coco_id in enumerate(coco_class_names.keys())}
 
