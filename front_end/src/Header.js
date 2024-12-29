@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-
+import {Link} from 'react-router-dom';
+import "./header.css"
 const Header = () => {
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <nav className="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
             <div className="container-fluid">
                 <Link className="navbar-brand" to="/">2조프로젝트</Link>
                 <button
@@ -31,10 +31,6 @@ const Header = () => {
                             <Link className="nav-link" to="#">About</Link>
                         </li>
                     </ul>
-                    <form className="d-flex">
-                        <input className="form-control me-sm-2" type="search" placeholder="Search"/>
-                        <button className="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                    </form>
                 </div>
             </div>
         </nav>

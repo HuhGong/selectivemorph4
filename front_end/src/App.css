@@ -1,193 +1,199 @@
 /* Updated App.css */
 .container {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  height: 100vh;
-  position: relative;
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    width: 100%; /* 화면 전체 너비를 사용 */
+    max-width: 100%; /* 최대 너비 제한 해제 */
+    box-sizing: border-box; /* 패딩 포함 */
+    height: 100vh; /* 부모 높이를 고정 */
+    position: relative; /* 필요 시 위치 조정 */
+    margin-top: 70px; /* 네비게이션 바 아래로 70px 내려감 */
+
 }
 
 .left-section {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 30%;
-  justify-content: space-between;
-  height: 50%;
-  min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 30%;
+    justify-content: space-between;
+    height: 50%;
+    min-height: 300px;
 }
 
 .image-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
 }
 
 .image-preview {
-  width: 150px;
-  height: 150px;
-  border: 1px solid #ccc;
+    width: 150px;
+    height: 150px;
+    border: 1px solid #ccc;
 }
 
 .right-section {
-  display: flex;
-  flex-direction: column;
-  width: 70%;
-  height: 300px;
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    height: 300px;
 }
 
 .gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-  margin-top: 10px;
-  background-color: #f0f0f0;
-  border-radius: 15px;
-  padding: 10px; /* 내부 여백 추가 */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 10px;
+    background-color: #f0f0f0; /* 연한 회색 배경 */
+    border-radius: 15px; /* 모서리 둥글게 */
+    height: 100%; /* 높이 설정 */
+    box-sizing: border-box; /* 패딩 포함 크기 설정 */
 }
 
 .thumbnail {
-  width: 200px;
-  height: 200px;
-  border: 1px solid #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background-color: #f8f9fa;
-  margin: 0;
-  border-radius: 15px;
-  overflow: hidden;
-  transition: border-color 0.3s; /* 강조 효과를 위한 부드러운 전환 */
+    width: 200px;
+    height: 200px;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: #f8f9fa;
+    margin: 0; /* 여백 제거 */
+    border-radius: 15px; /* 모서리 둥글게 */
+    overflow: hidden; /* 테두리 밖의 내용이 잘리도록 */
 }
 
 .thumbnail-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  margin: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    margin: 0;
 }
 
 .thumbnail:hover {
-  border-color: #61dafb; /* 마우스 오버 시 테두리 색상 변경 */
+    border-color: #61dafb; /* 마우스 오버 시 테두리 색상 변경 */
 }
 
 .thumbnail.selected {
-  border-color: #f5a623; /* 선택된 이미지 강조 */
+    border-color: #f5a623; /* 선택된 이미지 강조 */
 }
 
 .image-preview-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0;
-  margin: 0 auto;
-  border: 2px solid transparent;
-  cursor: pointer;
-  border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    margin: 0 auto;
+    border: 2px solid transparent;
+    cursor: pointer;
+    border-radius: 15px;
 }
 
 .image-preview-container.selected {
-  border: 3px dashed #f5a623; /* 선택된 경우 테두리 */
-  cursor: pointer;
+    border: 3px dashed #f5a623; /* 선택된 경우 테두리 */
+    cursor: pointer;
 }
 
 .image-preview {
-  width: 200px;
-  height: 200px;
-  border: 1px solid #ccc;
-  border-radius: 15px;
+    width: 200px;
+    height: 200px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
 }
 
 .result-preview1 {
-  width: 100%;
-  height: auto;
-  border: 1px solid #ccc;
-  border-radius: 15px;
+    width: 100%;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 15px; /* 컨테이너의 모서리를 둥글게 */
+    display: flex;
 }
 
 .placeholder {
-  width: 150px;
-  height: 150px;
-  border: 1px solid #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(136, 136, 136, 0.05);
-  font-size: 14px;
-  margin: 0;
-  border-radius: 15px;
-  flex-direction: column;
+    width: 150px;
+    height: 150px;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(136, 136, 136, 0.05);
+    font-size: 14px;
+    margin: 0;
+    border-radius: 15px;
+    flex-direction: column;
 }
 
 .upload-button {
-  margin-top: 10px;
-  padding: 10px 20px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
 }
 
 .upload-button:hover {
-  background-color: #45a049;
+    background-color: #45a049;
 }
 
 @media (max-width: 768px) {
-  .result-preview {
-    width: 200px;
-    height: 200px;
-  }
-  .left-section, .right-section {
-    flex: 1 1 100%;
-  }
+    .result-preview {
+        width: 200px;
+        height: 200px;
+    }
+
+    .left-section, .right-section {
+        flex: 1 1 100%;
+    }
 }
 
 @media (min-width: 768px) {
-  .result-preview {
-    width: 400px;
-    height: 400px;
-  }
+    .result-preview {
+        width: 400px;
+        height: 400px;
+    }
 }
 
 .content {
-  margin-top: 70px;
-  padding: 20px;
+    margin-top: 70px;
+    padding: 20px;
 }
 
 .main-container {
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 20px;
-  padding: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
 }
 
 .result-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+
+    flex-wrap: wrap; /* 가로 공간이 부족하면 다음 줄로 배치 */
 }
 
 .download-button {
-  margin-top: 10px;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .download-button:hover {
-  background-color: #0056b3;
+    background-color: #0056b3;
 }
 
 .image-number-display {
@@ -196,6 +202,7 @@
     color: #333;
     text-align: center; /* 중앙 정렬 */
 }
+
 .final-image-display {
     margin-top: 20px;
     text-align: center; /* 중앙 정렬 */
@@ -210,3 +217,18 @@
 }
 
 
+.download-button:hover {
+    background-color: #0056b3;
+}
+
+.generated-image-section {
+    display: block;
+}
+
+.generated-image-section.active {
+    display: block;
+}
+
+.content-gallery.hidden, .style-gallery.hidden {
+    display: none;
+}

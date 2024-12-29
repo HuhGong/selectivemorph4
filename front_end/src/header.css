@@ -1,0 +1,37 @@
+.custom-navbar {
+    background: linear-gradient(135deg, #003459 0%, #007ea7 100%);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    color: #ffffff !important;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.navbar-brand:hover {
+    color: #90e0ef !important;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #90e0ef !important;
+    transform: translateY(-2px);
+}
+
+.nav-link.active {
+    color: #90e0ef !important;
+    font-weight: 600;
+}
+
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(144, 224, 239, 0.25);
+}

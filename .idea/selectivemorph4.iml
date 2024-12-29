@@ -12,6 +12,7 @@
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/back_end/VOC2012" />
       <excludeFolder url="file://$MODULE_DIR$/back_end/output" />
+      <excludeFolder url="file://$MODULE_DIR$/back_end/weights" />
     </content>
     <orderEntry type="jdk" jdkName="selectivemorph4" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

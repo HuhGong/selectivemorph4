@@ -16,7 +16,6 @@ class_names = {
 }
 
 
-
 def resize_with_aspect_ratio_preserve_ids(image, target_size=custom_size):
     """
     이미지의 비율을 유지하면서 지정된 target_size 내에 맞게 리사이즈하고 패딩을 추가하며,
@@ -48,6 +47,7 @@ def resize_with_aspect_ratio_preserve_ids(image, target_size=custom_size):
 
     return padded_image
 
+
 def print_class_colors(image, palette, class_names):
     image_array = np.array(image)
     unique_classes = np.unique(image_array)
@@ -57,6 +57,7 @@ def print_class_colors(image, palette, class_names):
         class_name = class_names.get(class_id, "Unknown")
         color = palette[class_id * 3: class_id * 3 + 3]
         print(f"Class ID {class_name} (ID: {class_id}): Color {tuple(color)}")
+
 
 def image_loader(image, resize=None):
     # Open the image
@@ -81,20 +82,9 @@ def image_loader(image, resize=None):
 
 
 def load_pspnet_model(weights_path):
-    # First load the model with 150 classes (ADE20K)
-    net = PSPNet(n_classes=150)
-    state_dict = torch.load(weights_path, weights_only=True)
-
-    # Create new state dict excluding classification layers
-    new_state_dict = {}
-    for k, v in state_dict.items():
-        if 'classification' not in k:  # Keep all non-classification layers
-            new_state_dict[k] = v
-
-    # Initialize the model with 21 classes (VOC2012)
     net = PSPNet(n_classes=21)
-    # Load the modified state dict with strict=False to allow missing keys
-    net.load_state_dict(new_state_dict, strict=False)
+    state_dict = torch.load(weights_path, weights_only=True)
+    net.load_state_dict(state_dict)
     net.eval()
     return net.to(device)
 
@@ -103,6 +93,7 @@ def setup_output_folder():
     output_folder = "output\\anno"
     os.makedirs(output_folder, exist_ok=True)
     return output_folder
+
 
 def clear_output_folder(output_folder):
     """output/anno 폴더의 모든 파일을 삭제합니다."""
@@ -115,10 +106,12 @@ def clear_output_folder(output_folder):
         except Exception as e:
             print(f"Error deleting {file_path}: {e}")
 
+
 def setup_output_folder():
     output_folder = "output\\anno"
     os.makedirs(output_folder, exist_ok=True)
     return output_folder
+
 
 def load_images():
     try:

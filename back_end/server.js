@@ -12,7 +12,7 @@ require('dotenv').config();
 app.use(cors({
     origin: '*', // 모든 출처 허용
     methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Cache-Control', 'Pragma','Expires'],
+    allowedHeaders: ['Content-Type', 'Cache-Control', 'Pragma', 'Expires'],
 }));
 
 const python_interpreter = process.env.PYTHON_INTERPRETER;
@@ -35,7 +35,7 @@ app.post('/upload', async (req, res) => {
         return res.status(400).json({message: 'Content Image and Style Image are required.'});
     }
 
-    console.log('Upload request received:', { contentImage, styleImage });
+    console.log('Upload request received:', {contentImage, styleImage});
 
     const uploadsDir = path.join(__dirname, 'uploads');
     const contentImageDir = path.join(uploadsDir, 'contentImage');
@@ -78,7 +78,7 @@ app.post('/upload', async (req, res) => {
 
         // Python 스크립트 실행
         await new Promise((resolve, reject) => {
-            exec(`"${python_interpreter}" ${path.join(__dirname, 'segment.py')} "${contentImagePath}" "${styleImagePath}"`,
+            exec(`"${python_interpreter}" ${path.join(__dirname, 'coco_segment.py')} "${contentImagePath}" "${styleImagePath}"`,
                 {
                     env: {...process.env},
                     shell: true
@@ -115,26 +115,26 @@ app.post('/upload', async (req, res) => {
 
 // 선택된 이미지 ID 처리 엔드포인트
 app.post('/process-selected', (req, res) => {
-    const { selectedIds } = req.body;
+    const {selectedIds} = req.body;
 
     if (!selectedIds || !Array.isArray(selectedIds)) {
-        return res.status(400).json({ message: 'Selected IDs are required and must be an array.' });
+        return res.status(400).json({message: 'Selected IDs are required and must be an array.'});
     }
 
     console.log('Selected IDs received:', selectedIds);
 
-    res.status(200).json({ message: 'Selected IDs processed successfully!', selectedIds });
+    res.status(200).json({message: 'Selected IDs processed successfully!', selectedIds});
 });
 
 
 app.post('/transfer', async (req, res) => {
-    const { selectedClasses } = req.body;
+    const {selectedClasses} = req.body;
 
     // selectedClasses가 빈 배열이면 transfer.py를 실행하고,
     // 그렇지 않으면 real_final_src_transfer.py를 실행
     const scriptPath = selectedClasses.length === 0
-        ? path.join(__dirname, 'transfer.py')
-        : path.join(__dirname, 'real_final_src_transfer.py');
+        ? path.join(__dirname, 'style_transfer_normal.py')
+        : path.join(__dirname, 'coco_transfer.py');
 
     try {
         const command = selectedClasses.length === 0
@@ -143,7 +143,7 @@ app.post('/transfer', async (req, res) => {
 
         await new Promise((resolve, reject) => {
             exec(command, {
-                env: { ...process.env },
+                env: {...process.env},
                 shell: true,
                 encoding: 'utf-8'
             }, (error, stdout, stderr) => {
@@ -167,14 +167,13 @@ app.post('/transfer', async (req, res) => {
                 finalImagePath: '/output/final_combined_image.png',
             });
         } else {
-            res.status(404).json({ message: 'Final combined image not found.' });
+            res.status(404).json({message: 'Final combined image not found.'});
         }
     } catch (error) {
         console.error('Error during transfer:', error);
-        res.status(500).json({ message: 'Error during transfer', error: error.message });
+        res.status(500).json({message: 'Error during transfer', error: error.message});
     }
 });
-
 
 
 app.get('/annotations', (req, res) => {

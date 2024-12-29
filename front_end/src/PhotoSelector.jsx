@@ -12,7 +12,9 @@ function PhotoSelector() {
     const [selectedIds, setSelectedIds] = useState([]);
     const [finalImage, setFinalImage] = useState(null); // 최종 이미지 상태 추가
     const [transferLoading, setTransferLoading] = useState(false);
-
+    // 상태 추가
+    const [isUploadDisabled, setIsUploadDisabled] = useState(false);
+    const [isTransferDisabled, setIsTransferDisabled] = useState(false);
 
     const [contentPhotos, setContentPhotos] = useState([
         {id: 1, src: '', isUpload: true},
@@ -88,7 +90,7 @@ function PhotoSelector() {
         setLoading(true);
         // 업로드 전에 outputImages 배열을 비움
         setOutputImages([]);
-
+        setIsTransferDisabled(true); // 트랜스퍼 버튼 비활성화
         try {
             const response = await fetch('http://localhost:5000/upload', {
                 method: 'POST',
@@ -129,11 +131,13 @@ function PhotoSelector() {
             console.error('Fetch error:', error);
         } finally {
             setLoading(false);
+            setIsTransferDisabled(false); // 트랜스퍼 버튼 다시 활성화
         }
     };
 
     const handleClassTransfer = async () => {
         setTransferLoading(true);
+        setIsUploadDisabled(true); // 업로드 버튼 비활성화
         try {
             console.log('Selected IDs before sending:', selectedIds);
             const response = await fetch('http://localhost:5000/transfer', {
@@ -163,6 +167,7 @@ function PhotoSelector() {
             console.error('Transfer error:', error);
         } finally {
             setTransferLoading(false);
+            setIsUploadDisabled(false); // 업로드 버튼 다시 활성화
         }
     };
 
@@ -185,10 +190,8 @@ function PhotoSelector() {
         // 현재 선택된 타입과 같은 타입을 클릭하면 선택 해제
         if (currentSelection === type) {
             setCurrentSelection('');
-
         } else {
             setCurrentSelection(type);
-
         }
     };
 
@@ -218,173 +221,176 @@ function PhotoSelector() {
 
 
     return (
-        <div className="container">
-            {/* Left Section */}
-            <div className="left-section">
-                <div className="image-box">
-                    <h3>Content Image</h3>
-                    <div
-                        className={`image-preview-container ${
-                            currentSelection === 'content' ? 'selected' : ''
-                        }`}
-                        onClick={() => toggleSelection('content')}
-                    >
-                        {contentImage ? (
-                            <img src={contentImage} alt="Content" className="image-preview"/>
-                        ) : (
-                            <div className="placeholder">
-                                <FaImage style={{fontSize: '24px', color: '#888'}}/>
-                            </div>
-                        )}
+        <div className="style-transfer-container-1">
+            <div className="container">
+                {/* Left Section */}
+                <div className="left-section">
+                    <div className="image-box">
+                        <h3>Content Image</h3>
+                        <div
+                            className={`image-preview-container ${
+                                currentSelection === 'content' ? 'selected' : ''
+                            }`}
+                            onClick={() => toggleSelection('content')}
+                        >
+                            {contentImage ? (
+                                <img src={contentImage} alt="Content" className="image-preview"/>
+                            ) : (
+                                <div className="placeholder">
+                                    <FaImage style={{fontSize: '24px', color: '#888'}}/>
+                                </div>
+                            )}
+                        </div>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            style={{display: 'none'}}
+                            id="contentUploadInput"
+                            onChange={(e) => handleImageUpload(e, 'content')}
+                        />
                     </div>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        style={{display: 'none'}}
-                        id="contentUploadInput"
-                        onChange={(e) => handleImageUpload(e, 'content')}
-                    />
+
+                    <div className="image-box">
+                        <h3>Style Image</h3>
+                        <div
+                            className={`image-preview-container ${
+                                currentSelection === 'style' ? 'selected' : ''
+                            }`}
+                            onClick={() => toggleSelection('style')}
+                        >
+                            {styleImage ? (
+                                <img src={styleImage} alt="Style" className="image-preview"/>
+                            ) : (
+                                <div className="placeholder">
+                                    <FaImage style={{fontSize: '24px', color: '#888'}}/>
+                                </div>
+                            )}
+                        </div>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            style={{display: 'none'}}
+                            id="styleUploadInput"
+                            onChange={(e) => handleImageUpload(e, 'style')}
+                        />
+                        {/* Upload Button */}
+                        <button type="button" className="btn btn-primary" onClick={handleFileUploadToBackend}
+                                disabled={loading || isUploadDisabled}>
+                            {loading ? '업로드 중...' : '스타일 전송을 위한 업로드'}
+                        </button>
+
+                    </div>
                 </div>
 
-                <div className="image-box">
-                    <h3>Style Image</h3>
-                    <div
-                        className={`image-preview-container ${
-                            currentSelection === 'style' ? 'selected' : ''
-                        }`}
-                        onClick={() => toggleSelection('style')}
-                    >
-                        {styleImage ? (
-                            <img src={styleImage} alt="Style" className="image-preview"/>
-                        ) : (
-                            <div className="placeholder">
-                                <FaImage style={{fontSize: '24px', color: '#888'}}/>
-                            </div>
-                        )}
-                    </div>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        style={{display: 'none'}}
-                        id="styleUploadInput"
-                        onChange={(e) => handleImageUpload(e, 'style')}
-                    />
-                    {/* Upload Button */}
-                    <button type="button" className="btn btn-primary" onClick={handleFileUploadToBackend}
-                            disabled={loading}>
-                        {loading ? '업로드 중...' : '스타일 전송을 위한 업로드'}
-                    </button>
-                    <div className="right-section">
-                        {outputImages.length > 0 && (
-                            <div className="result-container">
-                                <h4>생성된 이미지:</h4>
 
-                                {outputImages.map((imageObj, index) => (
-                                    <div key={index} onClick={() => handleGeneratedImageClick(index)}>
-                                        <img
-                                            src={imageObj.path} // 이미지 경로 사용
-                                            alt={`Generated Output ${index}`}
-                                            className="result-preview1"
-                                            data-index={index}
-                                        />
+                {/* Right Section */}
+                <div className="right-section">
+                    {currentSelection === 'content' && (
+                        <>
+                            <h3>Content Gallery</h3>
+                            <div className="gallery">
+                                {contentPhotos.map((photo) => (
+                                    <div
+                                        key={photo.id}
+                                        onClick={() => handlePhotoClick(photo, 'content')}
+                                        className={`thumbnail ${selectedIds.includes(photo.id) ? 'selected' : ''}`}
+                                    >
+                                        {photo.isUpload ? (
+                                            <div className="thumbnail">
+                                                <FaUpload style={{fontSize: '24px', color: '#888'}}/>
+                                            </div>
+                                        ) : (
+                                            <img src={photo.src} alt="Thumbnail" className="thumbnail-image"/>
+                                        )}
                                     </div>
                                 ))}
+                                <input
+                                    id="contentUploadInputGallery"
+                                    type="file"
+                                    accept="image/*"
+                                    style={{display: 'none'}}
+                                    onChange={(e) => handleImageUpload(e, 'content')}
+                                />
                             </div>
-                        )}
+                        </>
+                    )}
+
+                    {currentSelection === 'style' && (
+                        <>
+                            <h3>Style Gallery</h3>
+                            <div className="gallery">
+                                {stylePhotos.map((photo) => (
+                                    <div
+                                        key={photo.id}
+                                        onClick={() => handlePhotoClick(photo, 'style')}
+                                        className={`thumbnail ${selectedIds.includes(photo.id) ? 'selected' : ''}`}
+                                    >
+                                        {photo.isUpload ? (
+                                            <div className="thumbnail">
+                                                <FaUpload style={{fontSize: '24px', color: '#888'}}/>
+                                            </div>
+                                        ) : (
+                                            <img src={photo.src} alt="Thumbnail" className="thumbnail-image"/>
+                                        )}
+                                    </div>
+                                ))}
+                                <input
+                                    id="styleUploadInputGallery"
+                                    type="file"
+                                    accept="image/*"
+                                    style={{display: 'none'}}
+                                    onChange={(e) => handleImageUpload(e, 'style')}
+                                />
+                            </div>
+                        </>
+                    )}
+                </div>
+
+                {/* 클릭한 이미지 번호 리스트 표시 */}
+                {selectedIds.length > 0 && (
+                    <div className="image-number-display">
+                        <h4>클릭한 이미지 번호:</h4>
+                        <ul>
+                            {selectedIds.sort((a, b) => a - b).map(id => ( // ID를 오름차순으로 정렬
+                                <li key={id}>{id}</li>
+                            ))}
+                        </ul>
                     </div>
-                </div>
-            </div>
-
-
-            {/* Right Section */}
-            <div className="right-section">
-                {currentSelection === 'content' && (
-                    <>
-                        <h3>Content Gallery</h3>
-                        <div className="gallery">
-                            {contentPhotos.map((photo) => (
-                                <div
-                                    key={photo.id}
-                                    onClick={() => handlePhotoClick(photo, 'content')}
-                                    className={`thumbnail ${selectedIds.includes(photo.id) ? 'selected' : ''}`}
-                                >
-                                    {photo.isUpload ? (
-                                        <div className="thumbnail">
-                                            <FaUpload style={{fontSize: '24px', color: '#888'}}/>
-                                        </div>
-                                    ) : (
-                                        <img src={photo.src} alt="Thumbnail" className="thumbnail-image"/>
-                                    )}
-                                </div>
-                            ))}
-                            <input
-                                id="contentUploadInputGallery"
-                                type="file"
-                                accept="image/*"
-                                style={{display: 'none'}}
-                                onChange={(e) => handleImageUpload(e, 'content')}
-                            />
-                        </div>
-                    </>
                 )}
 
-                {currentSelection === 'style' && (
-                    <>
-                        <h3>Style Gallery</h3>
-                        <div className="gallery">
-                            {stylePhotos.map((photo) => (
-                                <div
-                                    key={photo.id}
-                                    onClick={() => handlePhotoClick(photo, 'style')}
-                                    className={`thumbnail ${selectedIds.includes(photo.id) ? 'selected' : ''}`}
-                                >
-                                    {photo.isUpload ? (
-                                        <div className="thumbnail">
-                                            <FaUpload style={{fontSize: '24px', color: '#888'}}/>
-                                        </div>
-                                    ) : (
-                                        <img src={photo.src} alt="Thumbnail" className="thumbnail-image"/>
-                                    )}
-                                </div>
-                            ))}
-                            <input
-                                id="styleUploadInputGallery"
-                                type="file"
-                                accept="image/*"
-                                style={{display: 'none'}}
-                                onChange={(e) => handleImageUpload(e, 'style')}
-                            />
-                        </div>
-                    </>
+
+                {/* 클래스를 트랜스퍼 버튼 */}
+                <button className="btn btn-primary" onClick={handleClassTransfer}
+                        disabled={transferLoading || isTransferDisabled}>
+                    {transferLoading ? '트랜스퍼 중...' : '클래스를 트랜스퍼'}
+                </button>
+
+                {/* 최종 이미지 표시 */}
+                {finalImage && (
+                    <div className="final-image-display">
+                        <h4>최종 이미지:</h4>
+                        <img src={finalImage} alt="Final Combined" className="result-preview1"/>
+                    </div>
                 )}
             </div>
-
-            {/* 클릭한 이미지 번호 리스트 표시 */}
-            {selectedIds.length > 0 && (
-                <div className="image-number-display">
-                    <h4>클릭한 이미지 번호:</h4>
-                    <ul>
-                        {selectedIds.sort((a, b) => a - b).map(id => ( // ID를 오름차순으로 정렬
-                            <li key={id}>{id}</li>
-                        ))}
-                    </ul>
+            <div className="result-container">
+                <h4>생성된 이미지:</h4>
+                <div className="generated-images-wrapper">
+                    {outputImages.map((imageObj, index) => (
+                        <div key={index} onClick={() => handleGeneratedImageClick(index)}>
+                            <img
+                                src={imageObj.path}
+                                alt={`Generated Output ${index}`}
+                                className="result-preview1"
+                                data-index={index}
+                            />
+                        </div>
+                    ))}
                 </div>
-            )}
-
-
-            {/* 클래스를 트랜스퍼 버튼 */}
-            <button className="btn btn-primary" onClick={handleClassTransfer} disabled={transferLoading}>
-                {transferLoading ? '트랜스퍼 중...' : '클래스를 트랜스퍼'}
-            </button>
-
-            {/* 최종 이미지 표시 */}
-            {finalImage && (
-                <div className="final-image-display">
-                    <h4>최종 이미지:</h4>
-                    <img src={finalImage} alt="Final Combined" className="result-preview1"/>
-                </div>
-            )}
+            </div>
         </div>
+
+
     );
 }
 
