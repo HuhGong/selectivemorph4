@@ -119,12 +119,11 @@
 }
 
 .btn-primary {
-    margin-top: 20px;
     clear: both;
     display: block;
     width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
+    /* 버튼 아래 여백 추가 */
+    margin: 30px auto 20px;
 }
 
 .btn-primary:hover {
@@ -241,25 +240,26 @@
     justify-content: center;
 }
 
+.image-number-display h4 {
+    color: white;
+    font-size: 1.2rem;
+    margin-bottom: 20px; /* 제목 아래 여백 추가 */
+    text-align: center;
+    /* 기존 background gradient 스타일 제거 */
+    background: none;
+    -webkit-background-clip: initial;
+    -webkit-text-fill-color: initial;
+}
+
 .image-number-display {
     background: rgba(33, 150, 243, 0.1);
     border-radius: 15px;
     padding: 20px;
-    margin: 20px auto;
+    margin: 30px auto; /* 상하 여백 증가 */
     max-width: 200px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(33, 150, 243, 0.2);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.image-number-display h4 {
-    color: #2196F3;
-    font-size: 1.2rem;
-    margin-bottom: 15px;
-    text-align: center;
-    background: linear-gradient(45deg, #2196F3, #00BCD4);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 .image-number-display ul {
@@ -280,8 +280,8 @@
     font-weight: 500;
     width: 80%;
     text-align: center;
-    transition: all 0.3s ease;
 }
+
 
 .image-number-display li:hover {
     transform: translateX(5px);
