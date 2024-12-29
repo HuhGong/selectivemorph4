@@ -279,6 +279,16 @@ function PhotoSelector() {
                             {loading ? '업로드 중...' : '스타일 전송을 위한 업로드'}
                         </button>
 
+                        {/* 클래스를 트랜스퍼 버튼 - outputImages가 있을 때만 표시 */}
+                        {outputImages.length > 0 && (
+                            <button
+                                className="btn btn-primary"
+                                onClick={handleClassTransfer}
+                                disabled={transferLoading || isTransferDisabled}
+                            >
+                                {transferLoading ? '트랜스퍼 중...' : '클래스를 트랜스퍼'}
+                            </button>
+                        )}
                     </div>
                 </div>
 
@@ -359,11 +369,7 @@ function PhotoSelector() {
                 )}
 
 
-                {/* 클래스를 트랜스퍼 버튼 */}
-                <button className="btn btn-primary" onClick={handleClassTransfer}
-                        disabled={transferLoading || isTransferDisabled}>
-                    {transferLoading ? '트랜스퍼 중...' : '클래스를 트랜스퍼'}
-                </button>
+
 
                 {/* 최종 이미지 표시 */}
                 {finalImage && (
@@ -373,6 +379,7 @@ function PhotoSelector() {
                     </div>
                 )}
             </div>
+
             {outputImages.length > 0 && (
                 <div className="result-container">
                     <h4>생성된 이미지</h4>

@@ -119,11 +119,14 @@
 }
 
 .btn-primary {
-    clear: both;
-    display: block;
+    min-width: 250px;
     width: fit-content;
-    /* 버튼 아래 여백 추가 */
-    margin: 30px auto 20px;
+    padding: 12px 24px;
+    margin: 20px auto;
+    display: block;
+    text-align: center;
+    font-size: 1rem;
+    white-space: nowrap;
 }
 
 .btn-primary:hover {
@@ -139,14 +142,22 @@
     opacity: 0.6;
 }
 
+/* 모바일 환경을 위한 반응형 디자인 */
 @media (max-width: 768px) {
     .btn-primary {
-        min-width: 100px;
-        padding: 6px 12px;
-        font-size: 0.8rem;
+        min-width: 200px;
+        padding: 10px 20px;
+        font-size: 0.9rem;
     }
 }
 
+@media (max-width: 480px) {
+    .btn-primary {
+        min-width: 180px;
+        padding: 8px 16px;
+        font-size: 0.8rem;
+    }
+}
 .btn-primary:active {
     transform: translateY(1px);
 }
