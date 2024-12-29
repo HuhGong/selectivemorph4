@@ -126,7 +126,7 @@
     display: block;
     text-align: center;
     font-size: 1rem;
-    white-space: nowrap;
+    white-space: nowrap; background: linear-gradient(45deg, #2196F3, #00BCD4);
 }
 
 .btn-primary:hover {
