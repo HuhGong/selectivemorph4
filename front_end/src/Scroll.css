@@ -196,9 +196,9 @@
 .steps-container {
     display: flex;
     justify-content: center;
-    gap: 40px;
+    gap: 50px;
     flex-wrap: wrap;
-    max-width: 1200px;
+    max-width: 1500px;
     margin: 0 auto;
 }
 
@@ -206,10 +206,15 @@
     flex: 1;
     min-width: 250px;
     max-width: 300px;
+    min-height: 250px;
     padding: 30px;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 20px;
     position: relative;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .step-number {
@@ -222,19 +227,33 @@
     justify-content: center;
     font-size: 1.2rem;
     font-weight: bold;
-    margin: 0 auto 20px;
+    margin-bottom: 20px;
+    color: white;
 }
 
 .step h3 {
     font-size: 1.3rem;
-    margin-bottom: 15px;
+    margin: 0 0 15px 0;
     color: #2196F3;
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 10px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .step p {
     color: #a0a0a0;
     line-height: 1.6;
+    margin: 0;
+    width: 100%;
+    text-align: center;
 }
+
 
 @media (max-width: 768px) {
     .features-grid {
