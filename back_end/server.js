@@ -78,7 +78,7 @@ app.post('/upload', async (req, res) => {
 
         // Python 스크립트 실행
         await new Promise((resolve, reject) => {
-            exec(`"${python_interpreter}" ${path.join(__dirname, 'coco_segment.py')} "${contentImagePath}" "${styleImagePath}"`,
+            exec(`"${python_interpreter}" ${path.join(__dirname, 'pspnet_segment.py')} "${contentImagePath}" "${styleImagePath}"`,
                 {
                     env: {...process.env},
                     shell: true
@@ -134,7 +134,7 @@ app.post('/transfer', async (req, res) => {
     // 그렇지 않으면 real_final_src_transfer.py를 실행
     const scriptPath = selectedClasses.length === 0
         ? path.join(__dirname, 'style_transfer_normal.py')
-        : path.join(__dirname, 'coco_transfer.py');
+        : path.join(__dirname, 'psp_style_transfer.py');
 
     try {
         const command = selectedClasses.length === 0

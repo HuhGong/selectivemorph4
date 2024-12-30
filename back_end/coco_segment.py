@@ -12,7 +12,7 @@ import os
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True,max_split_size_mb:128"
 # Define constants
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-torch.cuda.empty_cache()  #
+torch.cuda.empty_cache()
 torch.set_default_device(device)
 custom_size = (512, 512)
 target_class_ids = [0]

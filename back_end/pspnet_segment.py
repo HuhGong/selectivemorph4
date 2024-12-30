@@ -154,8 +154,8 @@ def segment_image(net, content_img, anno_class_img, transform, device, content_i
     anno_class_img = anno_class_img.resize((content_img_width, content_img_height), Image.NEAREST)
     anno_class_img.putpalette(p_palette)
 
-    output_path = os.path.join(output_folder, "anno_class_img.png")
-    anno_class_img.save(output_path)
+    # output_path = os.path.join(output_folder, "anno_class_img.png")
+    # anno_class_img.save(output_path)
 
     print_class_colors(anno_class_img.convert("P"), p_palette, class_names)
 

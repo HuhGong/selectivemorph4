@@ -10,7 +10,7 @@ Selective Morph는 선택적 스타일 트랜스퍼와 실시간 세그멘테이
 - 커스텀 스타일: 자신만의 스타일 이미지 업로드 가능
 
 ## 기술 스택
-
+- GPU vram 12gb minimum is required
 ### Frontend
 - React
 - CSS3
