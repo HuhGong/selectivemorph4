@@ -231,8 +231,9 @@ def segment_image(net, content_img, transform, device, content_img_width, conten
     anno_class_img = anno_class_img.resize((content_img_width, content_img_height), Image.NEAREST)
     anno_class_img.putpalette(p_palette.flatten())  # 팔레트 설정
 
-    output_path = os.path.join(output_folder, "anno_class_img_coco.png")
-    anno_class_img.save(output_path)
+    # output_path = os.path.join(output_folder, "anno_class_img_coco.png")
+    # anno_class_img.save(output_path)
+
     valid_class_ids = print_class_colors(segmentation_map_coco, p_palette, coco_class_names)
     # print_class_colors(segmentation_map_coco, p_palette, coco_class_names)
     # unique_classes = np.unique(segmentation_map)
