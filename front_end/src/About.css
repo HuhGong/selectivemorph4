@@ -250,3 +250,68 @@ h2::after {
         font-size: 1.5rem;
     }
 }
+
+.ai-paper-section {
+    margin-top: 6rem;
+    padding: 3rem 2rem;
+    border-top: 1px solid rgba(100, 255, 218, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 15px;
+}
+
+.ai-paper-section h2 {
+    color: #2196F3;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.ai-paper-section ul {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.ai-paper-section li {
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.ai-paper-section li:hover {
+    transform: translateX(10px);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.ai-paper-section a {
+    color: #64ffda;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: block;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.ai-paper-section a::before {
+    content: '📄';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+@media (max-width: 768px) {
+    .ai-paper-section {
+        padding: 2rem 1rem;
+        margin-top: 4rem;
+    }
+
+    .ai-paper-section li {
+        padding: 1rem;
+    }
+
+    .ai-paper-section a {
+        font-size: 1rem;
+    }
+}

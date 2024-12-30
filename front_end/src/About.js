@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import './About.css';
 
 function About() {
@@ -16,10 +16,10 @@ function About() {
     ];
 
     const teamMembers = [
-        { name: "김준래", role: "프론트엔드 개발자", github: "https://github.com/junlae223" },
-        { name: "윤현준", role: "AI 모델 개발자", github: "https://github.com/YHJ659" },
-        { name: "이제우", role: "백엔드 개발자", github: "https://github.com/jewoos2921" },
-        { name: "정세찬", role: "백엔드 개발자", github: "https://github.com/HuhGong" }
+        {name: "김준래", role: "프론트엔드 개발자", github: "https://github.com/junlae223"},
+        {name: "윤현준", role: "AI 모델 개발자", github: "https://github.com/YHJ659"},
+        {name: "이제우", role: "백엔드 개발자", github: "https://github.com/jewoos2921"},
+        {name: "정세찬", role: "백엔드 개발자", github: "https://github.com/HuhGong"}
     ];
 
     const aiHeroes = [
@@ -93,6 +93,39 @@ function About() {
                         </div>
                     ))}
                 </div>
+            </section>
+
+            <section className="ai-paper-section">
+                <h2>참고 자료</h2>
+                <ul>
+                    <li>
+                        <a href="https://paperswithcode.com/task/style-transfer" target="_blank"
+                           rel="noopener noreferrer">CNN
+                            스타일 트랜스퍼 관련 사이트</a>
+                    </li>
+                    <li>
+                        <a href="https://en.wikipedia.org/wiki/Neural_style_transfer" target="_blank"
+                           rel="noopener noreferrer">Neural style transfer Wiki</a>
+                    </li>
+                    <li>
+                        <a href="https://paperswithcode.com/method/pspnet" target="_blank" rel="noopener noreferrer">PSP
+                            Net
+                            관련 사이트</a>
+                    </li>
+                    <li>
+                        <a href="https://arxiv.org/abs/1612.01105" target="_blank" rel="noopener noreferrer">PSP Net
+                            논문</a>
+                    </li>
+                    <li>
+                        <a href="https://arxiv.org/abs/1808.00897" target="_blank" rel="noopener noreferrer">BISE Net
+                            논문</a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/CoinCheung/BiSeNet" target="_blank" rel="noopener noreferrer">BISE
+                            Net
+                            GitHub</a>
+                    </li>
+                </ul>
             </section>
 
             <footer className="about-footer">
