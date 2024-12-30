@@ -5,7 +5,7 @@ const Header = () => {
     return (
         <nav className="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
             <div className="container-fluid">
-                <Link className="navbar-brand" to="/">2조프로젝트</Link>
+                <Link className="navbar-brand" to="/">Selective Morph</Link>
                 <button
                     className="navbar-toggler"
                     type="button"

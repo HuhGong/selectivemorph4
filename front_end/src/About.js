@@ -26,43 +26,42 @@ function About() {
             <h2>팀</h2>
             <ul>
                 <li>김준래 - 프론트엔드 개발자</li>
-                <li>윤현준 - 백엔드 개발자</li>
-                <li>이제우 - 디자이너</li>
-                <li>정세찬 - </li>
+                <li>윤현준 - ai 모델 개발자</li>
+                <li>이제우 - 백엔드 개발자</li>
+                <li>정세찬 - 백엔드 개발자</li>
             </ul>
-            <h2>연락처</h2>
-            <p>문의사항이 있으시면 <a href="https://github.com/HuhGong/selectivemorph4">https://github.com/HuhGong</a>으로 연락주세요.</p>
+
 
             <h2>우리의 영웅들</h2>
             <p>AI가 없었다면 우리는 이 모든 것을 이룰 수 없었을 것입니다. 여기 우리의 영웅들, 즉 AI들이 있습니다:</p>
             <ul>
-                <li>
-                    <a href="[Open AI ChatGPT 사이트 주소]" target="_blank" rel="noopener noreferrer">Open AI ChatGPT</a>
+                <li>스타일 트랜스퍼 - 원본 이미지의 콘텐츠를 보존하면서 다른 이미지의 스타일을 전송하는 혁신적인 AI 기술입니다. 텍스처, 색상, 시각적 특징을 새로운 이미지에 적용할 수
+                    있습니다.
                 </li>
-                <li>
-                    <a href="[뤼튼 사이트 주소]" target="_blank" rel="noopener noreferrer">뤼튼</a>
+                <li>BiSeNet - 실시간 세그멘테이션을 위한 양방향 네트워크로, Detail Branch와 Semantic Branch를 통해 공간 정보와 의미론적 정보를 효과적으로
+                    처리합니다.
                 </li>
-                <li>
-                    <a href="[Perplexity 사이트 주소]" target="_blank" rel="noopener noreferrer">Perplexity</a>
+                <li>PSPNet - 이미지의 전역적 문맥 정보를 활용하는 피라미드 구조의 세그멘테이션 네트워크입니다. CityScape 데이터셋에서 80.2%의 높은 정확도를
+                    달성했습니다.
                 </li>
-                {/* 추가 사이트를 여기에 추가 가능 */}
             </ul>
 
             <h2>참고 자료</h2>
             <ul>
                 <li>
-                    CNN 스타일 트랜스퍼 논문: <a href="https://paperswithcode.com/task/style-transfer" target="_blank"
-                                        rel="noopener noreferrer">여기</a>
+                    <a href="https://paperswithcode.com/task/style-transfer" target="_blank" rel="noopener noreferrer">CNN 스타일 트랜스퍼 관련 사이트</a>
                 </li>
                 <li>
-                    PSP Net 논문: <a href="https://arxiv.org/abs/1612.01105" target="_blank"
-                                   rel="noopener noreferrer">여기</a>
+                    <a href="https://arxiv.org/abs/1612.01105" target="_blank" rel="noopener noreferrer">PSP Net 논문</a>
                 </li>
                 <li>
-                    BIS Net 논문: <a href="https://arxiv.org/abs/1808.00897" target="_blank"
-                                   rel="noopener noreferrer">여기</a>
+                    <a href="https://arxiv.org/abs/1808.00897" target="_blank" rel="noopener noreferrer">BISE Net 논문</a>
                 </li>
             </ul>
+
+            <h2>연락처</h2>
+            <p>문의사항이 있으시면 <a href="https://github.com/HuhGong/selectivemorph4">https://github.com/HuhGong</a>으로 연락주세요.
+            </p>
         </div>
     );
 }

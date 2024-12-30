@@ -276,7 +276,7 @@ function PhotoSelector() {
                         {/* Upload Button */}
                         <button type="button" className="btn btn-primary" onClick={handleFileUploadToBackend}
                                 disabled={loading || isUploadDisabled}>
-                            {loading ? '업로드 중...' : '스타일 전송을 위한 업로드'}
+                            {loading ? '업로드 중...' : 'Image Upload'}
                         </button>
 
                         {/* 클래스를 트랜스퍼 버튼 - outputImages가 있을 때만 표시 */}
