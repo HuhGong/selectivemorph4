@@ -254,7 +254,7 @@ def save_final_result(style_transferred_output, CONTENT_IMAGE_PATH, class_mask_e
     final_result = Image.fromarray(result_array.astype(np.uint8))
 
     # final_combined_image.png만 저장하도록 수정
-    final_result_path = os.path.join(output_folder, "final_combined_image.png")
+    final_result_path = os.path.join(output_folder, "sample_7.png")
     final_result.save(final_result_path)
     return final_result_path
 

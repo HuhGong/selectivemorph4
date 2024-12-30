@@ -159,12 +159,12 @@ app.post('/transfer', async (req, res) => {
             });
         });
 
-        const finalImagePath = path.join(__dirname, 'output', 'final_combined_image.png');
+        const finalImagePath = path.join(__dirname, 'output', 'sample_7.png');
 
         if (fs.existsSync(finalImagePath)) {
             res.status(200).json({
                 message: 'Transfer completed successfully!',
-                finalImagePath: '/output/final_combined_image.png',
+                finalImagePath: '/output/sample_7.png',
             });
         } else {
             res.status(404).json({message: 'Final combined image not found.'});

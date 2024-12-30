@@ -6,6 +6,7 @@ import image1 from './assets/samples/sample_1.png';
 import image2 from './assets/samples/sample_3.png';
 import image3 from './assets/samples/sample_4.png';
 import image4 from './assets/samples/sample_6.png';
+import image5 from './assets/samples/sample_2.png';
 
 const ImageCompare = () => {
     const containerRef = useRef(null);
@@ -13,7 +14,7 @@ const ImageCompare = () => {
     const [percentage, setPercentage] = useState(50);
     const [currentImage, setCurrentImage] = useState(0);
 
-    const imageUrls = [image0, image1, image2, image3, image4];
+    const imageUrls = [image3, image1, image2, image5, image4];
 
     const calculatePercentage = (clientX) => {
         const {left, width} = containerRef.current.getBoundingClientRect();

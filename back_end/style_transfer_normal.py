@@ -89,7 +89,7 @@ def apply_style_transfer(content_img, style_img, custom_size, cnn, cnn_normaliza
                               content_image, style_image, input_img)
 
 def save_final_result(style_transferred_output, output_folder):
-    final_result_path = os.path.join(output_folder, "final_combined_image.png")
+    final_result_path = os.path.join(output_folder, "sample_7.png")
     save_image(style_transferred_output, final_result_path)
     return final_result_path
 
