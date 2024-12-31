@@ -21,7 +21,7 @@ function PhotoSelector() {
         {id: 2, src: require('./assets/content/image4.jpg')},
         {id: 3, src: require('./assets/content/image5.jpg')},
         {id: 4, src: require('./assets/content/image6.jpeg')},
-        {id: 5, src: require('./assets/content/image8.png')},
+        {id: 5, src: require('./assets/content/image8.jpg')},
         {id: 6, src: require('./assets/content/image11.jpg')},
     ]);
 
@@ -359,7 +359,7 @@ function PhotoSelector() {
                 {/* 클릭한 이미지 번호 리스트 표시 */}
                 {selectedIds.length > 0 && (
                     <div className="image-number-display">
-                        <h4>클릭한 이미지 번호</h4>
+                        <h4>Clicked Image Number</h4>
                         <ul>
                             {selectedIds.sort((a, b) => a - b).map(id => ( // ID를 오름차순으로 정렬
                                 <li key={id}>{id}</li>
@@ -374,7 +374,7 @@ function PhotoSelector() {
                 {/* 최종 이미지 표시 */}
                 {finalImage && (
                     <div className="final-image-display">
-                        <h4>최종 이미지</h4>
+                        <h4>Generated Image</h4>
                         <img src={finalImage} alt="Final Combined" className="result-preview1"/>
                     </div>
                 )}
@@ -382,7 +382,7 @@ function PhotoSelector() {
 
             {outputImages.length > 0 && (
                 <div className="result-container">
-                    <h4>생성된 이미지</h4>
+                    <h4>Segmented Image</h4>
                     <div className="generated-images-wrapper">
                         {outputImages.map((imageObj, index) => (
                             <div key={index} onClick={() => handleGeneratedImageClick(index)}>
