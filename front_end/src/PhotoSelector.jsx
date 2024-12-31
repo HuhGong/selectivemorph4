@@ -198,18 +198,17 @@ function PhotoSelector() {
 
     const handleGeneratedImageClick = (index) => {
         const imageObj = outputImages[index];
-        // 파일 이름에서 클래스 이름을 추출하는 정규식 패턴 수정
-        const match = imageObj.path.match(/anno_class_img_(\w+)\.png/);
+        const match = imageObj.path.match(/anno_class_img_(\d+)\.png/);
 
         if (match) {
-            const className = match[1]; // 숫자 대신 문자열 추출
+            const id = parseInt(match[1]);
             setSelectedIds(prevIds => {
-                // 이미 선택된 클래스명인 경우 해당 클래스명을 제외한 배열 반환
-                if (prevIds.includes(className)) {
-                    return prevIds.filter(existingClass => existingClass !== className);
+                // 이미 선택된 ID인 경우 해당 ID를 제외한 배열 반환
+                if (prevIds.includes(id)) {
+                    return prevIds.filter(existingId => existingId !== id);
                 }
-                // 선택되지 않은 경우 새로운 클래스명 추가
-                return [...prevIds, className];
+                // 선택되지 않은 경우 새로운 ID 추가
+                return [...prevIds, id];
             });
 
             // 이미지 요소에 selected 클래스 토글

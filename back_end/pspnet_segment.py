@@ -165,7 +165,7 @@ def segment_image(net, content_img, anno_class_img, transform, device, content_i
         class_mask = (y == class_id).astype(np.uint8) * 255  # 클래스 마스크 생성
         class_image = Image.fromarray(class_mask, mode="L")  # "L" 모드로 저장
         class_image = class_image.resize((content_img_width, content_img_height), Image.NEAREST)
-        class_image_path = os.path.join(output_folder, f"anno_class_img_{class_names[class_id]}.png")
+        class_image_path = os.path.join(output_folder, f"anno_class_img_{class_id}.png")
         class_image.save(class_image_path)
 
     return anno_class_img

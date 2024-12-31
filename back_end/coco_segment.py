@@ -17,7 +17,7 @@ torch.set_default_device(device)
 custom_size = (512, 512)
 target_class_ids = [0]
 
-coco_class_names = { 0: "background",1: "person", 2: "bicycle", 3: "car", 4: "motorcycle", 5: "airplane", 6: "bus", 7: "train",
+coco_class_names = {1: "person", 2: "bicycle", 3: "car", 4: "motorcycle", 5: "airplane", 6: "bus", 7: "train",
                     8: "truck", 9: "boat", 10: "traffic light", 11: "fire hydrant", 13: "stop sign",
                     14: "parking meter", 15: "bench",
                     16: "bird", 17: "cat", 18: "dog", 19: "horse", 20: "sheep", 21: "cow", 22: "elephant", 23: "bear",
@@ -241,7 +241,7 @@ def segment_image(net, content_img, transform, device, content_img_width, conten
         class_mask = (segmentation_map_coco == class_id).astype(np.uint8) * 255  # 클래스 마스크 생성
         class_image = Image.fromarray(class_mask, mode="L")  # "L" 모드로 저장
         class_image = class_image.resize((content_img_width, content_img_height), Image.NEAREST)
-        class_image_path = os.path.join(output_folder, f"anno_class_img_{coco_class_names[class_id]}.png")
+        class_image_path = os.path.join(output_folder, f"anno_class_img_{class_id}.png")
         class_image.save(class_image_path)
         print(f"Class ID {class_id}: 저장 완료 - {class_image_path}")
 
