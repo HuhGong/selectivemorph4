@@ -135,6 +135,13 @@ function PhotoSelector() {
         }
     };
 
+    // 먼저 상단에 class_names 객체를 추가
+    const class_names = {
+        0: "Background", 1: "Aeroplane", 2: "Bicycle", 3: "Bird", 4: "Boat", 5: "Bottle", 6: "Bus", 7: "Car",
+        8: "Cat", 9: "Chair", 10: "Cow", 11: "Dining Table", 12: "Dog", 13: "Horse", 14: "Motorbike",
+        15: "Person", 16: "Potted Plant", 17: "Sheep", 18: "Sofa", 19: "Train", 20: "TV Monitor"
+    };
+
     const handleClassTransfer = async () => {
         setTransferLoading(true);
         setIsUploadDisabled(true); // 업로드 버튼 비활성화
@@ -357,14 +364,15 @@ function PhotoSelector() {
                     )}
                 </div>
 
-                {/* 클릭한 이미지 번호 리스트 표시 */}
                 {selectedIds.length > 0 && (
                     <div className="image-number-display">
                         <h4>Clicked</h4>
                         <ul>
-                            {selectedIds.sort((a, b) => a - b).map(id => ( // ID를 오름차순으로 정렬
-                                <li key={id}>{id}</li>
-                            ))}
+                            {selectedIds
+                                .sort((a, b) => a - b)
+                                .map(id => (
+                                    <li key={id}>{class_names[id]}</li>
+                                ))}
                         </ul>
                     </div>
                 )}
