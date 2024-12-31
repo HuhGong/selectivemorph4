@@ -276,11 +276,12 @@
 .image-number-display ul {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
     align-items: center;
     list-style: none;
     padding: 0;
     margin: 0;
+    width: 100%;
 }
 
 .image-number-display li {
@@ -289,7 +290,7 @@
     border-radius: 20px;
     color: white;
     font-weight: 500;
-    width: 80%;
+    width: 100%;
     text-align: center;
 }
 

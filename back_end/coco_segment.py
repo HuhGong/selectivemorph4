@@ -241,7 +241,7 @@ def segment_image(net, content_img, transform, device, content_img_width, conten
         class_mask = (segmentation_map_coco == class_id).astype(np.uint8) * 255  # 클래스 마스크 생성
         class_image = Image.fromarray(class_mask, mode="L")  # "L" 모드로 저장
         class_image = class_image.resize((content_img_width, content_img_height), Image.NEAREST)
-        class_image_path = os.path.join(output_folder, f"anno_class_img_{class_id}.png")
+        class_image_path = os.path.join(output_folder, f"anno_class_img_{coco_class_names[class_id]}.png")
         class_image.save(class_image_path)
         print(f"Class ID {class_id}: 저장 완료 - {class_image_path}")
 
