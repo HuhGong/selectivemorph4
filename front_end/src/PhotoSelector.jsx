@@ -359,7 +359,7 @@ function PhotoSelector() {
                 {/* 클릭한 이미지 번호 리스트 표시 */}
                 {selectedIds.length > 0 && (
                     <div className="image-number-display">
-                        <h4>Clicked Image Number</h4>
+                        <h4>Clicked</h4>
                         <ul>
                             {selectedIds.sort((a, b) => a - b).map(id => ( // ID를 오름차순으로 정렬
                                 <li key={id}>{id}</li>
